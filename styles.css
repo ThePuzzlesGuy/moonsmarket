@@ -22,7 +22,7 @@ html, body { margin: 0; padding: 0; }
   --radius: 18px;
 
   --moon-core: rgba(169,139,255,0.35);
-  --moon-lit: #fff7e4;
+  --moon-lit: #fff0d6;
   --moon-shadow: #0e2338;
 }
 
@@ -36,7 +36,7 @@ html, body { margin: 0; padding: 0; }
   --card: rgba(17,47,73,0.06);
   --border: rgba(17,47,73,0.12);
   --moon-core: rgba(169,139,255,0.25);
-  --moon-lit: #fff0d2;
+  --moon-lit: #ffedd0;
   --moon-shadow: #c7d4e6;
 }
 
@@ -165,21 +165,29 @@ section { padding: clamp(56px, 10vw, 100px) 20px; }
 
 .phase-ring { position: absolute; inset: 0; background: conic-gradient(from 90deg, var(--brand-lavender), var(--brand-gold), var(--brand-lavender)); -webkit-mask: radial-gradient(circle at center, transparent 0 46%, #000 46% 53%, transparent 53%); mask: radial-gradient(circle at center, transparent 0 46%, #000 46% 53%, transparent 53%); opacity: .45; filter: blur(0.4px); pointer-events: none; z-index: 0; }
 
-/* --- Cart Drawer (popup) --- */
-.cart-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.4); opacity: 0; pointer-events: none; transition: opacity .2s ease; }
+/* --- Cart Drawer (RIGHT slide-out) --- */
+.cart-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.4); opacity: 0; pointer-events: none; transition: opacity .2s ease; z-index: 59; }
 .cart-overlay.open { opacity: 1; pointer-events: auto; }
 
 .cart-drawer {
-  position: fixed; left: 50%; bottom: 16px; transform: translate(-50%, 40px);
-  width: min(940px, 92vw);
-  border: 1px solid var(--border); border-radius: var(--radius);
+  position: fixed; top: 72px; right: 0;
+  width: min(420px, 92vw);
+  height: calc(100dvh - 84px);
+  border-left: 1px solid var(--border);
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  border-radius: 16px 0 0 16px;
   background: var(--card);
-  box-shadow: 0 30px 80px rgba(0,0,0,0.55);
-  padding: 12px; z-index: 60; opacity: 0; transition: transform .28s cubic-bezier(.2,.8,.2,1), opacity .18s ease;
+  box-shadow: -24px 0 80px rgba(0,0,0,0.45);
+  padding: 12px;
+  z-index: 60;
+  transform: translateX(110%);
+  opacity: 0;
+  transition: transform .3s cubic-bezier(.2,.8,.2,1), opacity .2s ease;
 }
-.cart-drawer.open { transform: translate(-50%, 0); opacity: 1; }
+.cart-drawer.open { transform: translateX(0); opacity: 1; }
 .cart-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
-.cart-items { list-style: none; padding: 0; margin: 0; display: grid; gap: 6px; max-height: 220px; overflow: auto; }
+.cart-items { list-style: none; padding: 0; margin: 0; display: grid; gap: 6px; max-height: calc(100% - 90px); overflow: auto; }
 .cart-item { display: grid; grid-template-columns: auto 1fr auto; gap: 10px; align-items: center; padding: 10px; border: 1px solid var(--border); border-radius: 12px; background: rgba(255,255,255,0.04); }
 .cart-item .dot { width: 10px; height: 10px; border-radius: 999px; background: var(--brand-gold); }
 .cart-item button { background: transparent; border: 1px solid var(--border); border-radius: 10px; padding: 6px 10px; cursor: pointer; }
@@ -197,7 +205,7 @@ section { padding: clamp(56px, 10vw, 100px) 20px; }
 .chip:hover { border-color: var(--brand-gold); transform: translateY(-1px); background: linear-gradient(180deg, rgba(242,209,117,0.12), rgba(255,255,255,0.02)); }
 .chip-note { text-align: center; margin-top: 12px; min-height: 24px; color: var(--muted); }
 
-/* --- Rituals (match product card UI + moon phase background) --- */
+/* --- Rituals (match product card UI + explicit moon graphics) --- */
 .rituals .ritual-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 16px; max-width: 1200px; margin: 0 auto; }
 @media (max-width: 1100px) { .rituals .ritual-grid { grid-template-columns: repeat(2,1fr); } }
 @media (max-width: 560px) { .rituals .ritual-grid { grid-template-columns: 1fr; } }
@@ -210,7 +218,6 @@ section { padding: clamp(56px, 10vw, 100px) 20px; }
   display: grid; gap: 6px; padding: 16px;
   grid-template-rows: max-content max-content 1fr max-content;
   min-height: 260px;
-  --phase-shift: 0%;
 }
 .ritual-card:hover { border-color: var(--brand-gold); }
 .ritual-card > * { position: relative; z-index: 1; }
@@ -226,26 +233,44 @@ section { padding: clamp(56px, 10vw, 100px) 20px; }
   z-index: 0; filter: blur(30px);
 }
 
-/* moon phase overlay */
+/* explicit moon graphics per phase */
 .ritual-card::after {
   content: "";
-  position: absolute; right: -6%; top: -6%;
+  position: absolute; right: -6%; top: -8%;
   width: 72%; height: 72%;
-  background:
-    radial-gradient(circle at 70% 35%, var(--moon-lit) 0 42%, transparent 43%),
-    radial-gradient(circle at calc(70% + var(--phase-shift)) 35%, var(--moon-shadow) 0 42%, transparent 43%);
-  border-radius: 999px;
-  opacity: .85;
-  filter: drop-shadow(0 8px 24px rgba(0,0,0,.35));
   pointer-events: none;
   z-index: 0;
+  opacity: 0.92;
+  filter: drop-shadow(0 8px 24px rgba(0,0,0,.35));
+  background: none;
 }
 
-/* Phase offsets */
-.ritual-card[data-phase="new"]    { --phase-shift:   0%; }   /* shadow centered -> moon hidden */
-.ritual-card[data-phase="waxing"] { --phase-shift: -40%; }   /* lit on right */
-.ritual-card[data-phase="full"]   { --phase-shift: 140%; }   /* shadow off-screen -> full */
-.ritual-card[data-phase="waning"] { --phase-shift:  40%; }   /* lit on left */
+/* FULL MOON: solid disc */
+.ritual-card[data-phase="full"]::after {
+  background:
+    radial-gradient(circle at 70% 35%, var(--moon-lit) 0 44%, transparent 45%);
+}
+
+/* NEW MOON: ring outline */
+.ritual-card[data-phase="new"]::after {
+  background:
+    radial-gradient(circle at 70% 35%, transparent 0 40%, var(--moon-lit) 40% 44%, transparent 44% 100%);
+  opacity: 0.85;
+}
+
+/* WAXING: thin crescent lit on RIGHT (shadow disc to left) */
+.ritual-card[data-phase="waxing"]::after {
+  background:
+    radial-gradient(circle at 58% 35%, var(--moon-shadow) 0 44%, transparent 45%),
+    radial-gradient(circle at 70% 35%, var(--moon-lit) 0 44%, transparent 45%);
+}
+
+/* WANING: thin crescent lit on LEFT (shadow disc to right) */
+.ritual-card[data-phase="waning"]::after {
+  background:
+    radial-gradient(circle at 82% 35%, var(--moon-shadow) 0 44%, transparent 45%),
+    radial-gradient(circle at 70% 35%, var(--moon-lit) 0 44%, transparent 45%);
+}
 
 /* Forms */
 .form-card { max-width: 700px; margin: 14px auto; padding: 16px; border: 1px solid var(--border); border-radius: var(--radius); background: var(--card); box-shadow: var(--shadow); }

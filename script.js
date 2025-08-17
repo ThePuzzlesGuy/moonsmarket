@@ -72,16 +72,11 @@ const cartDrawer = document.getElementById("cartDrawer");
 const cartOverlay = document.getElementById("cartOverlay");
 const cartCount = document.getElementById("cartCount");
 
-function openCart(autoClose=false) {
+function openCart(autoOpenFromAdd=false) {
   cartDrawer.classList.add("open");
   cartOverlay.hidden = false;
   cartOverlay.classList.add("open");
-  if (autoClose) {
-    const timer = setTimeout(() => {
-      if (!cartDrawer.matches(":hover")) closeCart();
-    }, 2500);
-    cartDrawer.addEventListener("mouseenter", () => clearTimeout(timer), { once: true });
-  }
+  // For side drawer, keep it open until closed or overlay clicked
 }
 function closeCart() {
   cartDrawer.classList.remove("open");
@@ -182,7 +177,7 @@ document.querySelectorAll(".use-ritual").forEach(btn => {
 // Footer year
 document.getElementById("year").textContent = new Date().getFullYear();
 
-// Easter egg: press "M" to float product cards
+// Easter egg: press "M" to float product + ritual cards
 window.addEventListener("keydown", (e) => {
   if (e.key.toLowerCase() === "m") {
     document.querySelectorAll(".product-card, .ritual-card").forEach(card => {
