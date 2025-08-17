@@ -221,12 +221,12 @@
     <section id="story" class="story">
       <div class="story-inner">
         <header class="section-header">
-          <h2>Our Story</h2>
+          <h2>My Story</h2>
           <p>Made in phases. Small-batch, planet-considerate, skin-first. I formulate in tiny runs so everything you touch is fresh.</p>
         </header>
         <div class="story-body">
-          <p>Moons Market started with a single pen of cuticle oil and a notebook of moon charts. I believe your routine should feel like a ritual — simple, sensory, and tuned to where you’re at.</p>
-          <p>Every jar and vial is blended with gentle, ingredient-forward bases and perfumed with subtle, mood-led accords. No parabens, no phthalates, no petrolatum — just thoughtful care for hands, lips, and skin.</p>
+          <p>Moons Market started with a single pen of cuticle oil and a notebook of moon charts. I believe your routine should feel like a ritual- simple, sensory, and tuned to where you’re at.</p>
+          <p>Every jar and vial is blended with gentle, ingredient-forward bases and perfumed with subtle, mood-led accords. No parabens, no phthalates, no petrolatum- just thoughtful care for hands, lips, and skin.</p>
         </div>
       </div>
     </section>
@@ -283,47 +283,88 @@
     </div>
   </aside>
 
-  <!-- Netlify forms -->
+<!-- …everything above stays the same… -->
+
+  <!-- CONTACT / NEWSLETTER (moved above footer and split into two cards) -->
   <section id="contact" class="contact">
     <header class="section-header">
       <h2>Stay in Phase</h2>
-      <p>Get lunar drops, small-batch restocks, and journal prompts.</p>
+      <p>Get lunar drops, small-batch restocks, and journal prompts — or reach out directly.</p>
     </header>
 
-    <form name="newsletter" method="POST" data-netlify="true" netlify-honeypot="bot-field" class="form-card">
-      <input type="hidden" name="form-name" value="newsletter" />
-      <p class="hidden">
-        <label>Don’t fill this out if you're human: <input name="bot-field" /></label>
-      </p>
-      <label class="field">
-        <span>Email</span>
-        <input type="email" name="email" required placeholder="you@luna.com" />
-      </label>
-      <button class="btn primary" type="submit">Subscribe</button>
-    </form>
-
-    <form name="contact" method="POST" data-netlify="true" netlify-honeypot="bot-field" class="form-card">
-      <input type="hidden" name="form-name" value="contact" />
-      <p class="hidden">
-        <label>Don’t fill this out if you're human: <input name="bot-field" /></label>
-      </p>
-      <div class="grid-2">
-        <label class="field">
-          <span>Name</span>
-          <input type="text" name="name" required placeholder="Your name" />
-        </label>
+    <div class="cta-grid">
+      <!-- Newsletter -->
+      <form name="newsletter" method="POST" data-netlify="true" netlify-honeypot="bot-field" class="form-card">
+        <h3>Newsletter</h3>
+        <input type="hidden" name="form-name" value="newsletter" />
+        <p class="hidden">
+          <label>Don’t fill this out if you're human: <input name="bot-field" /></label>
+        </p>
         <label class="field">
           <span>Email</span>
           <input type="email" name="email" required placeholder="you@luna.com" />
         </label>
-      </div>
-      <label class="field">
-        <span>Message</span>
-        <textarea name="message" rows="4" required placeholder="Tell me what you’re dreaming up…"></textarea>
-      </label>
-      <button class="btn ghost" type="submit">Send</button>
-    </form>
+        <button class="btn primary" type="submit">Subscribe</button>
+      </form>
+
+      <!-- Contact -->
+      <form name="contact" method="POST" data-netlify="true" netlify-honeypot="bot-field" class="form-card">
+        <h3>Contact</h3>
+        <input type="hidden" name="form-name" value="contact" />
+        <p class="hidden">
+          <label>Don’t fill this out if you're human: <input name="bot-field" /></label>
+        </p>
+        <div class="grid-2">
+          <label class="field">
+            <span>Name</span>
+            <input type="text" name="name" required placeholder="Your name" />
+          </label>
+          <label class="field">
+            <span>Email</span>
+            <input type="email" name="email" required placeholder="you@luna.com" />
+          </label>
+        </div>
+        <label class="field">
+          <span>Message</span>
+          <textarea name="message" rows="4" required placeholder="Tell me what you’re dreaming up…"></textarea>
+        </label>
+        <button class="btn ghost" type="submit">Send</button>
+      </form>
+    </div>
   </section>
+
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <img src="./assets/logo-mark.svg" alt="" width="28" height="28" />
+        <strong>Moons Market</strong>
+      </div>
+      <nav class="footer-nav" aria-label="Footer">
+        <a href="#shop">Shop</a>
+        <a href="#rituals">Rituals</a>
+        <a href="#story">Story</a>
+        <a href="#ingredients">Ingredients</a>
+        <a href="#contact">Contact</a>
+      </nav>
+      <div class="footer-copy">
+        © <span id="year"></span> Moons Market • Made in phases
+      </div>
+    </div>
+  </footer>
+
+  <!-- keep these at the very end of <body> -->
+  <div id="cartOverlay" class="cart-overlay" hidden></div>
+  <aside id="cartDrawer" class="cart-drawer" aria-live="polite" aria-atomic="true" aria-label="Cart">
+    <div class="cart-header">
+      <h3>Your Ritual</h3>
+      <button class="icon-btn clear" id="closeCart" aria-label="Close cart">✕</button>
+    </div>
+    <ul id="cartItems" class="cart-items"></ul>
+    <div class="cart-footer">
+      <button class="btn ghost" id="clearCart">Clear</button>
+      <button class="btn primary" id="checkoutBtn">Proceed</button>
+    </div>
+  </aside>
 
   <script src="./script.js" defer></script>
 </body>
