@@ -194,6 +194,9 @@ section { padding: clamp(56px, 10vw, 100px) 20px; }
 .chip {
   border: 1px solid var(--border); background: linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0.02));
   padding: 10px 14px; border-radius: 999px; cursor: pointer; transition: border-color .2s ease, transform .15s ease;
+  color: var(--text);                /* ← makes text visible in dark mode */
+  appearance: none;                  /* normalize button look */
+  -webkit-appearance: none;
 }
 .chip:hover { border-color: var(--accent); transform: translateY(-1px); }
 .chip-note { text-align: center; margin-top: 12px; min-height: 24px; color: var(--muted); }
