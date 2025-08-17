@@ -1,23 +1,22 @@
 // Utility: clamp
 const clamp = (min, val, max) => Math.min(max, Math.max(min, val));
 
-// Phase helpers
-const PHASES = [
-  "New Moon", "Waxing Crescent", "Waxing Crescent", "Waxing Crescent", "Waxing Crescent",
-  "First Quarter",
-  "Waxing Gibbous", "Waxing Gibbous", "Waxing Gibbous", "Waxing Gibbous", "Waxing Gibbous",
-  "Full Moon",
-  "Waning Gibbous", "Waning Gibbous", "Waning Gibbous", "Waning Gibbous", "Waning Gibbous",
-  "Last Quarter",
-  "Waning Crescent", "Waning Crescent", "Waning Crescent", "Waning Crescent", "Waning Crescent",
-  "New-ish",
-  "Waxing-ish", "Waxing-ish", "Gibby-ish", "Waning-ish", "Almost New", "Very New"
-];
+/** Phase label helper (8 principal phases) */
+function phaseLabel(d) {
+  const day = clamp(0, Math.round(Number(d)), 29);
+  if (day === 0 || day === 29) return "New Moon";
+  if (day < 7) return "Waxing Crescent";
+  if (day === 7) return "First Quarter";
+  if (day < 14) return "Waxing Gibbous";
+  if (day === 14) return "Full Moon";
+  if (day < 21) return "Waning Gibbous";
+  if (day === 21) return "Third Quarter";
+  return "Waning Crescent";
+}
 
-// Map phase index (0..29) to accent gradient
+// Map phase index (0..29) to accent gradient (aesthetic only)
 function accentForDay(d) {
-  // 0..29 => hue shifts and mix
-  const t = d / 29;
+  const t = Number(d) / 29;
   const hue1 = 230 + 70 * t; // blue->purple
   const hue2 = 280 + 40 * (1 - t); // purple->orchid
   const c1 = `hsl(${hue1.toFixed(1)} 100% 75%)`;
@@ -26,20 +25,42 @@ function accentForDay(d) {
   document.documentElement.style.setProperty("--accent-2", c2);
 }
 
-// Move the shadow orb horizontally to simulate phase
+/**
+ * Move the shadow orb horizontally to simulate phase correctly.
+ * Geometry notes:
+ * - New Moon: shadow disc centered (x = 0) fully covers the lit disc => invisible.
+ * - Full Moon: shadow disc moves completely off to the SIDE (|x| = 2R) => fully visible.
+ * - First Quarter: x = -R (lit on RIGHT).
+ * - Third Quarter: x = +R (lit on LEFT).
+ * Piecewise cosine mapping ensures exact quarter positions and cycle continuity.
+ */
 function setMoonPhase(day) {
   const shadow = document.getElementById("shadowOrb");
   const nameEl = document.getElementById("phaseName");
   const dayEl = document.getElementById("phaseDay");
 
   const d = clamp(0, Number(day), 29);
-  const pct = d / 29; // 0..1
-  // Range for x offset (-72..+72): new moon centers shadow on lit circle, full moon moves shadow far right
-  const r = 72;
-  const x = (pct * 2 - 1) * r;
+  const f = d / 29; // normalized 0..1 across the synodic month
+  const R = 72;     // circle radius used in the SVG
+
+  let x;
+  if (f <= 0.5) {
+    // Waxing: light grows on RIGHT -> move shadow LEFT (negative)
+    //  f=0   => 0 (New)
+    //  f=.25 => -R (First Quarter)
+    //  f=.5  => -2R (Full)
+    x = R * (Math.cos(2 * Math.PI * f) - 1);
+  } else {
+    // Waning: light remains on LEFT -> move shadow RIGHT (positive)
+    //  f=.5  => +2R (Full, still off-screen)
+    //  f=.75 => +R (Third Quarter)
+    //  f=1   => ~0 (approaching New)
+    x = R * (1 - Math.cos(2 * Math.PI * f));
+  }
+
   shadow.style.transform = `translateX(${x.toFixed(2)}px)`;
 
-  nameEl.textContent = PHASES[d] || "Waxing Crescent";
+  nameEl.textContent = phaseLabel(d);
   dayEl.textContent = d;
 
   accentForDay(d);
@@ -62,7 +83,7 @@ toggle?.addEventListener("click", () => {
 // Initialize moon slider
 const slider = document.getElementById("phaseSlider");
 slider?.addEventListener("input", (e) => setMoonPhase(e.target.value));
-setMoonPhase(slider?.value || 3);
+setMoonPhase(slider?.value || 0);
 
 // Cart / "Ritual" micro-cart
 const cart = [];
@@ -144,8 +165,8 @@ document.querySelectorAll(".use-ritual").forEach(btn => {
     cart.splice(0, cart.length);
     (map[phase] || []).forEach(n => cart.push({ name: n, qty: 1 }));
     renderCart();
-    // Also push the moon slider toward the relevant phase quadrant
-    const phaseTarget = { new: 0, waxing: 6, full: 12, waning: 19 }[phase] ?? 3;
+    // Push slider toward the quadrant
+    const phaseTarget = { new: 0, waxing: 7, full: 14, waning: 21 }[phase] ?? 0;
     slider.value = phaseTarget;
     setMoonPhase(phaseTarget);
   });
