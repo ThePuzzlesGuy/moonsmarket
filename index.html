@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Moons Market • Health, Beauty & Glow</title>
-  <meta name="description" content="Moons Market | cuticle oils, body butter, lip balm, and candles crafted to your lunar vibe." />
+  <meta name="description" content="Moons Market — cuticle oils, body butter, lip balm, and candles crafted to your lunar vibe." />
   <meta property="og:title" content="Moons Market" />
   <meta property="og:description" content="Health & beauty crafted to your lunar vibe." />
   <meta property="og:type" content="website" />
@@ -33,6 +33,10 @@
       <button id="themeToggle" class="icon-btn" aria-label="Toggle theme">
         <span class="icon-moon" aria-hidden="true"></span>
       </button>
+      <button id="cartButton" class="icon-btn cart-btn" aria-label="Open cart">
+        <span class="icon-cart" aria-hidden="true"></span>
+        <span id="cartCount" class="cart-count" aria-hidden="true">0</span>
+      </button>
     </nav>
   </header>
 
@@ -46,8 +50,8 @@
 
       <div class="hero-inner">
         <div class="hero-copy">
-          <h1><span class="headline-top">Glow with the</span><span class="headline-bottom">Moon</span></h1>
-          <p>Health & beauty that moves with your phases | from nourishing cuticle oils to whipped body butters, balms, and candles for your space.</p>
+          <h1><span class="headline-top">Glow by the</span><span class="headline-bottom">Moon</span></h1>
+          <p>Health & beauty that moves with your phases — from nourishing cuticle oils to whipped body butters, balms, and candles for your space.</p>
 
           <div class="hero-cta">
             <a class="btn primary" href="#shop">Shop the Collection</a>
@@ -160,17 +164,6 @@
           </div>
         </article>
       </div>
-
-      <aside class="mini-cart" aria-live="polite" aria-atomic="true">
-        <div class="cart-header">
-          <h3>Your Ritual</h3>
-          <button class="icon-btn clear" id="clearCart" aria-label="Clear ritual">✕</button>
-        </div>
-        <ul id="cartItems" class="cart-items"></ul>
-        <div class="cart-footer">
-          <button class="btn primary" id="checkoutBtn">Proceed</button>
-        </div>
-      </aside>
     </section>
 
     <!-- RITUALS -->
@@ -216,7 +209,7 @@
           <p>Wind down & repair.</p>
           <ul>
             <li>Rich layer of balm before bed</li>
-            <li>Candle: unwind blend</li>
+            <li>Steam + Candle: unwind blend</li>
             <li>Gratitude note</li>
           </ul>
           <button class="btn ghost use-ritual">Apply</button>
@@ -232,8 +225,8 @@
           <p>Made in phases. Small-batch, planet-considerate, skin-first. I formulate in tiny runs so everything you touch is fresh.</p>
         </header>
         <div class="story-body">
-          <p>Moons Market started with a single pen of cuticle oil and a notebook of moon charts. I believe your routine should feel like a ritual- simple, sensory, and tuned to where you’re at.</p>
-          <p>Every jar and vial is blended with gentle, ingredient-forward bases and perfumed with subtle, mood-led accords. No parabens, no phthalates, no petrolatum- just thoughtful care for hands, lips, and skin.</p>
+          <p>Moons Market started with a single pen of cuticle oil and a notebook of moon charts. I believe your routine should feel like a ritual — simple, sensory, and tuned to where you’re at.</p>
+          <p>Every jar and vial is blended with gentle, ingredient-forward bases and perfumed with subtle, mood-led accords. No parabens, no phthalates, no petrolatum — just thoughtful care for hands, lips, and skin.</p>
         </div>
       </div>
     </section>
@@ -255,48 +248,6 @@
       </div>
       <div class="chip-note" id="chipNote" role="status" aria-live="polite"></div>
     </section>
-
-    <!-- CONTACT / NEWSLETTER -->
-    <section id="contact" class="contact">
-      <header class="section-header">
-        <h2>Stay in Phase</h2>
-        <p>Get lunar drops, small-batch restocks, and journal prompts.</p>
-      </header>
-
-      <form name="newsletter" method="POST" data-netlify="true" netlify-honeypot="bot-field" class="form-card">
-        <input type="hidden" name="form-name" value="newsletter" />
-        <p class="hidden">
-          <label>Don’t fill this out if you're human: <input name="bot-field" /></label>
-        </p>
-        <label class="field">
-          <span>Email</span>
-          <input type="email" name="email" required placeholder="you@luna.com" />
-        </label>
-        <button class="btn primary" type="submit">Subscribe</button>
-      </form>
-
-      <form name="contact" method="POST" data-netlify="true" netlify-honeypot="bot-field" class="form-card">
-        <input type="hidden" name="form-name" value="contact" />
-        <p class="hidden">
-          <label>Don’t fill this out if you're human: <input name="bot-field" /></label>
-        </p>
-        <div class="grid-2">
-          <label class="field">
-            <span>Name</span>
-            <input type="text" name="name" required placeholder="Your name" />
-          </label>
-          <label class="field">
-            <span>Email</span>
-            <input type="email" name="email" required placeholder="you@luna.com" />
-          </label>
-        </div>
-        <label class="field">
-          <span>Message</span>
-          <textarea name="message" rows="4" required placeholder="Tell me what you’re dreaming up…"></textarea>
-        </label>
-        <button class="btn ghost" type="submit">Send</button>
-      </form>
-    </section>
   </main>
 
   <footer class="site-footer">
@@ -317,6 +268,62 @@
       </div>
     </div>
   </footer>
+
+  <!-- Cart Drawer (hidden until opened) -->
+  <div id="cartOverlay" class="cart-overlay" hidden></div>
+  <aside id="cartDrawer" class="cart-drawer" aria-live="polite" aria-atomic="true" aria-label="Cart">
+    <div class="cart-header">
+      <h3>Your Ritual</h3>
+      <button class="icon-btn clear" id="closeCart" aria-label="Close cart">✕</button>
+    </div>
+    <ul id="cartItems" class="cart-items"></ul>
+    <div class="cart-footer">
+      <button class="btn ghost" id="clearCart">Clear</button>
+      <button class="btn primary" id="checkoutBtn">Proceed</button>
+    </div>
+  </aside>
+
+  <!-- Netlify forms -->
+  <section id="contact" class="contact">
+    <header class="section-header">
+      <h2>Stay in Phase</h2>
+      <p>Get lunar drops, small-batch restocks, and journal prompts.</p>
+    </header>
+
+    <form name="newsletter" method="POST" data-netlify="true" netlify-honeypot="bot-field" class="form-card">
+      <input type="hidden" name="form-name" value="newsletter" />
+      <p class="hidden">
+        <label>Don’t fill this out if you're human: <input name="bot-field" /></label>
+      </p>
+      <label class="field">
+        <span>Email</span>
+        <input type="email" name="email" required placeholder="you@luna.com" />
+      </label>
+      <button class="btn primary" type="submit">Subscribe</button>
+    </form>
+
+    <form name="contact" method="POST" data-netlify="true" netlify-honeypot="bot-field" class="form-card">
+      <input type="hidden" name="form-name" value="contact" />
+      <p class="hidden">
+        <label>Don’t fill this out if you're human: <input name="bot-field" /></label>
+      </p>
+      <div class="grid-2">
+        <label class="field">
+          <span>Name</span>
+          <input type="text" name="name" required placeholder="Your name" />
+        </label>
+        <label class="field">
+          <span>Email</span>
+          <input type="email" name="email" required placeholder="you@luna.com" />
+        </label>
+      </div>
+      <label class="field">
+        <span>Message</span>
+        <textarea name="message" rows="4" required placeholder="Tell me what you’re dreaming up…"></textarea>
+      </label>
+      <button class="btn ghost" type="submit">Send</button>
+    </form>
+  </section>
 
   <script src="./script.js" defer></script>
 </body>
