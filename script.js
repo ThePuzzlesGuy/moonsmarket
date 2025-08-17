@@ -162,7 +162,7 @@ document.getElementById("clearCart")?.addEventListener("click", () => {
 });
 
 document.getElementById("checkoutBtn")?.addEventListener("click", () => {
-  alert("Netlify functions or a shop platform can plug in here.\\nFor now, your ritual is ready ✨");
+  alert("Netlify functions or a shop platform can plug in here.\nFor now, your ritual is ready ✨");
 });
 
 // Ritual presets: add a single line item named after the phase (not individual products)
@@ -185,7 +185,7 @@ document.getElementById("year").textContent = new Date().getFullYear();
 // Easter egg: press "M" to float product cards
 window.addEventListener("keydown", (e) => {
   if (e.key.toLowerCase() === "m") {
-    document.querySelectorAll(".product-card").forEach(card => {
+    document.querySelectorAll(".product-card, .ritual-card").forEach(card => {
       card.animate([
         { transform: "translateY(0)" },
         { transform: "translateY(-6px)" },

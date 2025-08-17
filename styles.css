@@ -9,7 +9,6 @@ html, body { margin: 0; padding: 0; }
   --brand-gold: #f2d175;
   --brand-cream: #fff2cf;
   --brand-lavender: #a98bff;
-  --brand-plum: #7c65d9;
 
   --bg: #0e2338;
   --bg-soft: #132b45;
@@ -167,10 +166,7 @@ section { padding: clamp(56px, 10vw, 100px) 20px; }
 .phase-ring { position: absolute; inset: 0; background: conic-gradient(from 90deg, var(--brand-lavender), var(--brand-gold), var(--brand-lavender)); -webkit-mask: radial-gradient(circle at center, transparent 0 46%, #000 46% 53%, transparent 53%); mask: radial-gradient(circle at center, transparent 0 46%, #000 46% 53%, transparent 53%); opacity: .45; filter: blur(0.4px); pointer-events: none; z-index: 0; }
 
 /* --- Cart Drawer (popup) --- */
-.cart-overlay {
-  position: fixed; inset: 0; background: rgba(0,0,0,0.4);
-  opacity: 0; pointer-events: none; transition: opacity .2s ease;
-}
+.cart-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.4); opacity: 0; pointer-events: none; transition: opacity .2s ease; }
 .cart-overlay.open { opacity: 1; pointer-events: auto; }
 
 .cart-drawer {
@@ -200,6 +196,56 @@ section { padding: clamp(56px, 10vw, 100px) 20px; }
 .chip { border: 1px solid var(--border); background: linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0.02)); padding: 10px 14px; border-radius: 999px; cursor: pointer; transition: border-color .2s ease, transform .15s ease, background .2s ease; color: var(--text); appearance: none; -webkit-appearance: none; }
 .chip:hover { border-color: var(--brand-gold); transform: translateY(-1px); background: linear-gradient(180deg, rgba(242,209,117,0.12), rgba(255,255,255,0.02)); }
 .chip-note { text-align: center; margin-top: 12px; min-height: 24px; color: var(--muted); }
+
+/* --- Rituals (match product card UI + moon phase background) --- */
+.rituals .ritual-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 16px; max-width: 1200px; margin: 0 auto; }
+@media (max-width: 1100px) { .rituals .ritual-grid { grid-template-columns: repeat(2,1fr); } }
+@media (max-width: 560px) { .rituals .ritual-grid { grid-template-columns: 1fr; } }
+
+.ritual-card {
+  position: relative; overflow: hidden; isolation: isolate;
+  border: 1px solid var(--border); border-radius: var(--radius);
+  background: linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0.02));
+  box-shadow: var(--shadow);
+  display: grid; gap: 6px; padding: 16px;
+  grid-template-rows: max-content max-content 1fr max-content;
+  min-height: 260px;
+  --phase-shift: 0%;
+}
+.ritual-card:hover { border-color: var(--brand-gold); }
+.ritual-card > * { position: relative; z-index: 1; }
+.ritual-card h3 { margin-bottom: 2px; }
+.ritual-card p { color: var(--muted); }
+.ritual-card ul { margin: 8px 0 0 18px; color: var(--muted); }
+.ritual-card .btn { align-self: end; margin-top: 10px; }
+
+/* soft glow like product cards */
+.ritual-card::before {
+  content: ""; position: absolute; inset: -30% -30% auto auto; height: 60%; width: 60%;
+  background: radial-gradient(closest-side, rgba(242,209,117,0.28), transparent);
+  z-index: 0; filter: blur(30px);
+}
+
+/* moon phase overlay */
+.ritual-card::after {
+  content: "";
+  position: absolute; right: -6%; top: -6%;
+  width: 72%; height: 72%;
+  background:
+    radial-gradient(circle at 70% 35%, var(--moon-lit) 0 42%, transparent 43%),
+    radial-gradient(circle at calc(70% + var(--phase-shift)) 35%, var(--moon-shadow) 0 42%, transparent 43%);
+  border-radius: 999px;
+  opacity: .85;
+  filter: drop-shadow(0 8px 24px rgba(0,0,0,.35));
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Phase offsets */
+.ritual-card[data-phase="new"]    { --phase-shift:   0%; }   /* shadow centered -> moon hidden */
+.ritual-card[data-phase="waxing"] { --phase-shift: -40%; }   /* lit on right */
+.ritual-card[data-phase="full"]   { --phase-shift: 140%; }   /* shadow off-screen -> full */
+.ritual-card[data-phase="waning"] { --phase-shift:  40%; }   /* lit on left */
 
 /* Forms */
 .form-card { max-width: 700px; margin: 14px auto; padding: 16px; border: 1px solid var(--border); border-radius: var(--radius); background: var(--card); box-shadow: var(--shadow); }
