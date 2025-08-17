@@ -37,7 +37,6 @@ function accentForDay(d) {
 function setMoonPhase(day) {
   const shadow = document.getElementById("shadowOrb");
   const nameEl = document.getElementById("phaseName");
-  const dayEl = document.getElementById("phaseDay");
 
   const d = clamp(0, Number(day), 29);
   const f = d / 29; // normalized 0..1 across the synodic month
@@ -61,7 +60,6 @@ function setMoonPhase(day) {
   shadow.style.transform = `translateX(${x.toFixed(2)}px)`;
 
   nameEl.textContent = phaseLabel(d);
-  dayEl.textContent = d;
 
   accentForDay(d);
 }
