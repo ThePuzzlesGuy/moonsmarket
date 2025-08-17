@@ -249,7 +249,7 @@
       <div class="chip-note" id="chipNote" role="status" aria-live="polite"></div>
     </section>
 
-    <!-- CONTACT / NEWSLETTER (side-by-side; hidden honeypots) -->
+    <!-- CONTACT / NEWSLETTER (cards with badge) -->
     <section id="contact" class="contact">
       <header class="section-header">
         <h2>Stay in Phase</h2>
@@ -257,46 +257,44 @@
       </header>
 
       <div class="cta-grid">
-        <!-- Newsletter -->
-        <form name="newsletter" method="POST" data-netlify="true" netlify-honeypot="bot-field" class="form-card">
+        <!-- Newsletter card -->
+        <form name="newsletter" method="POST" data-netlify="true" netlify-honeypot="bot-field" class="form-card card-pop">
+          <div class="badge" aria-hidden="true">
+            <svg viewBox="0 0 24 24" width="20" height="20" role="img" aria-label="Envelope">
+              <path fill="currentColor" d="M2 6a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V6zm2 .5 8 5 8-5V6H4v.5zm16 2.3-8 5-8-5V18h16V8.8z"/>
+            </svg>
+          </div>
           <h3>Newsletter</h3>
+          <p class="subtle">Stay up to date with new drops and small-batch restocks.</p>
           <input type="hidden" name="form-name" value="newsletter" />
-          <!-- Honeypot (hidden) -->
-          <label class="visually-hidden">Leave this field empty<input name="bot-field" tabindex="-1" autocomplete="off" /></label>
+          <label class="visually-hidden">Leave this empty<input name="bot-field" tabindex="-1" autocomplete="off" /></label>
 
-          <label class="field">
-            <span>Email</span>
+          <div class="input-row">
             <input type="email" name="email" required placeholder="you@luna.com" />
-          </label>
-          <div class="form-row-end">
-            <span class="fine-print" aria-hidden="true">Spam-shield enabled</span>
             <button class="btn primary" type="submit">Subscribe</button>
           </div>
+          <p class="tiny">Your email is safe with us — we don't spam.</p>
         </form>
 
-        <!-- Contact -->
-        <form name="contact" method="POST" data-netlify="true" netlify-honeypot="bot-field" class="form-card">
+        <!-- Contact card -->
+        <form name="contact" method="POST" data-netlify="true" netlify-honeypot="bot-field" class="form-card card-pop">
+          <div class="badge" aria-hidden="true">
+            <svg viewBox="0 0 24 24" width="20" height="20" role="img" aria-label="Chat">
+              <path fill="currentColor" d="M4 5h16a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H9l-5 4v-4H4a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2z"/>
+            </svg>
+          </div>
           <h3>Contact</h3>
+          <p class="subtle">Got a custom idea or wholesale request? Say hi.</p>
           <input type="hidden" name="form-name" value="contact" />
-          <!-- Honeypot (hidden) -->
-          <label class="visually-hidden">Leave this field empty<input name="bot-field" tabindex="-1" autocomplete="off" /></label>
+          <label class="visually-hidden">Leave this empty<input name="bot-field" tabindex="-1" autocomplete="off" /></label>
 
           <div class="grid-2">
-            <label class="field">
-              <span>Name</span>
-              <input type="text" name="name" required placeholder="Your name" />
-            </label>
-            <label class="field">
-              <span>Email</span>
-              <input type="email" name="email" required placeholder="you@luna.com" />
-            </label>
+            <input type="text" name="name" required placeholder="Your name" />
+            <input type="email" name="email" required placeholder="you@luna.com" />
           </div>
-          <label class="field">
-            <span>Message</span>
-            <textarea name="message" rows="4" required placeholder="Tell me what you’re dreaming up…"></textarea>
-          </label>
-          <div class="form-row-end">
-            <span class="fine-print" aria-hidden="true">Spam-shield enabled</span>
+          <textarea name="message" rows="4" required placeholder="Tell me what you’re dreaming up…"></textarea>
+
+          <div class="input-row end">
             <button class="btn ghost" type="submit">Send</button>
           </div>
         </form>
