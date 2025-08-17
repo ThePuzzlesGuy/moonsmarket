@@ -1,0 +1,329 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Moons Collective • Health, Beauty & Glow</title>
+  <meta name="description" content="Moons Collective — cuticle oils, body butter, lip balm, and candles crafted to your lunar vibe." />
+  <meta property="og:title" content="Moons Collective" />
+  <meta property="og:description" content="Health & beauty crafted to your lunar vibe." />
+  <meta property="og:type" content="website" />
+  <meta property="og:image" content="/assets/favicon.svg" />
+  <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg" />
+
+  <!-- Fonts (graceful fallback to system) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700&family=Playfair+Display:wght@600;800&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body>
+  <header class="site-header">
+    <a class="brand" href="#top" aria-label="Moons Collective home">
+      <img class="brand-mark" src="./assets/logo-mark.svg" alt="Moons Collective logo mark" width="36" height="36" />
+      <span class="brand-name">Moons Collective</span>
+    </a>
+    <nav class="site-nav" aria-label="Primary">
+      <a href="#shop">Shop</a>
+      <a href="#rituals">Rituals</a>
+      <a href="#story">Story</a>
+      <a href="#ingredients">Ingredients</a>
+      <a href="#contact">Contact</a>
+      <button id="themeToggle" class="icon-btn" aria-label="Toggle theme">
+        <span class="icon-moon" aria-hidden="true"></span>
+      </button>
+    </nav>
+  </header>
+
+  <main id="top">
+    <!-- HERO -->
+    <section class="hero" aria-label="Welcome">
+      <div class="sky">
+        <div class="stars" aria-hidden="true"></div>
+        <div class="shooting-star" aria-hidden="true"></div>
+      </div>
+
+      <div class="hero-inner">
+        <div class="hero-copy">
+          <h1><span class="headline-top">Glow by the</span><span class="headline-bottom">Moon</span></h1>
+          <p>Health & beauty that moves with your phases — from nourishing cuticle oils to whipped body butters, balms, and candles for your space.</p>
+
+          <div class="hero-cta">
+            <a class="btn primary" href="#shop">Shop the Collection</a>
+            <a class="btn ghost" href="#rituals">Build Your Ritual</a>
+          </div>
+        </div>
+
+        <!-- Interactive moon module -->
+        <div class="moon-module" aria-label="Interactive Moon">
+          <svg class="moon" viewBox="0 0 200 200" role="img" aria-labelledby="moonTitle moonDesc">
+            <title id="moonTitle">Lunar Phase Visualizer</title>
+            <desc id="moonDesc">An interactive moon that changes phase from new to full using the slider</desc>
+            <defs>
+              <radialGradient id="glow" cx="50%" cy="50%" r="50%">
+                <stop offset="0%" stop-color="var(--moon-core)" />
+                <stop offset="60%" stop-color="var(--moon-core)" stop-opacity="0.8" />
+                <stop offset="100%" stop-color="var(--moon-core)" stop-opacity="0" />
+              </radialGradient>
+              <filter id="soft" x="-50%" y="-50%" width="200%" height="200%">
+                <feGaussianBlur stdDeviation="3" />
+              </filter>
+            </defs>
+            <!-- Outer glow -->
+            <circle cx="100" cy="100" r="90" fill="url(#glow)" filter="url(#soft)" opacity="0.9"></circle>
+            <!-- Base orb -->
+            <circle cx="100" cy="100" r="72" class="moon-base"></circle>
+            <!-- Shadow orb that slides horizontally to simulate phases (updated via JS) -->
+            <g id="phaseMaskGroup">
+              <clipPath id="phaseClip">
+                <rect x="0" y="0" width="200" height="200"></rect>
+              </clipPath>
+              <g clip-path="url(#phaseClip)">
+                <circle cx="100" cy="100" r="72" class="moon-lit"></circle>
+                <circle id="shadowOrb" cx="100" cy="100" r="72" class="moon-shadow"></circle>
+              </g>
+            </g>
+            <!-- Subtle craters -->
+            <g class="craters" opacity="0.25">
+              <circle cx="130" cy="70" r="5"></circle>
+              <circle cx="90" cy="120" r="7"></circle>
+              <circle cx="120" cy="120" r="3"></circle>
+              <circle cx="70" cy="80" r="4"></circle>
+            </g>
+          </svg>
+
+          <div class="phase-ui">
+            <div class="phase-label">
+              <span id="phaseName">Waxing Crescent</span>
+              <span class="day-count"><span id="phaseDay">3</span>/29</span>
+            </div>
+            <input id="phaseSlider" type="range" min="0" max="29" value="3" aria-label="Moon day in 29.53 day cycle" />
+            <div class="phase-legend" aria-hidden="true">
+              <span>New</span><span>First</span><span>Full</span><span>Last</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <a class="scroll-cue" href="#shop" aria-label="Scroll to shop">⌄</a>
+    </section>
+
+    <!-- SHOP -->
+    <section id="shop" class="shop">
+      <header class="section-header">
+        <h2>Shop</h2>
+        <p>Small-batch essentials tuned to your lunar vibe.</p>
+      </header>
+
+      <div class="product-grid">
+        <article class="product-card" data-sku="cuticle-oil">
+          <div class="phase-ring" aria-hidden="true"></div>
+          <div class="card-body">
+            <h3>Cuticle Oil</h3>
+            <p class="sub">Jojoba • Vitamin E • Moonflower</p>
+            <p>Nourish nail beds and promote healthy growth with a fast-absorbing blend.</p>
+            <div class="actions">
+              <button class="btn add">Add to Ritual</button>
+            </div>
+          </div>
+        </article>
+
+        <article class="product-card" data-sku="body-butter">
+          <div class="phase-ring" aria-hidden="true"></div>
+          <div class="card-body">
+            <h3>Whipped Body Butter</h3>
+            <p class="sub">Shea • Kokum • Meadowfoam</p>
+            <p>Ultra-fluffy, melts on contact, leaves skin luminous without the slip.</p>
+            <div class="actions">
+              <button class="btn add">Add to Ritual</button>
+            </div>
+          </div>
+        </article>
+
+        <article class="product-card" data-sku="lip-balm">
+          <div class="phase-ring" aria-hidden="true"></div>
+          <div class="card-body">
+            <h3>Lip Balm</h3>
+            <p class="sub">Rice Bran • Candelilla • Vanilla Bean</p>
+            <p>Pillowy cushion for delicate lips, with a satin finish that lasts.</p>
+            <div class="actions">
+              <button class="btn add">Add to Ritual</button>
+            </div>
+          </div>
+        </article>
+
+        <article class="product-card" data-sku="candle">
+          <div class="phase-ring" aria-hidden="true"></div>
+          <div class="card-body">
+            <h3>Moon Candle</h3>
+            <p class="sub">Coconut Apricot Wax • Cotton Wick</p>
+            <p>Phase-influenced scents to set your space — grounded, fresh, or dreamy.</p>
+            <div class="actions">
+              <button class="btn add">Add to Ritual</button>
+            </div>
+          </div>
+        </article>
+      </div>
+
+      <aside class="mini-cart" aria-live="polite" aria-atomic="true">
+        <div class="cart-header">
+          <h3>Your Ritual</h3>
+          <button class="icon-btn clear" id="clearCart" aria-label="Clear ritual">✕</button>
+        </div>
+        <ul id="cartItems" class="cart-items"></ul>
+        <div class="cart-footer">
+          <button class="btn primary" id="checkoutBtn">Proceed</button>
+        </div>
+      </aside>
+    </section>
+
+    <!-- RITUALS -->
+    <section id="rituals" class="rituals">
+      <header class="section-header">
+        <h2>Build a Ritual</h2>
+        <p>Pick a phase, get a mini routine.</p>
+      </header>
+
+      <div class="ritual-grid">
+        <div class="ritual-card" data-phase="new">
+          <h3>New Moon</h3>
+          <p>Reset & nourish.</p>
+          <ul>
+            <li>Cuticle Oil after shower</li>
+            <li>Body Butter on damp skin</li>
+            <li>Journal one intention</li>
+          </ul>
+          <button class="btn ghost use-ritual">Apply</button>
+        </div>
+        <div class="ritual-card" data-phase="waxing">
+          <h3>Waxing</h3>
+          <p>Build & protect.</p>
+          <ul>
+            <li>Lip Balm through the day</li>
+            <li>Body Butter elbows/knees</li>
+            <li>Light Moon Candle: focus blend</li>
+          </ul>
+          <button class="btn ghost use-ritual">Apply</button>
+        </div>
+        <div class="ritual-card" data-phase="full">
+          <h3>Full Moon</h3>
+          <p>Glow & celebrate.</p>
+          <ul>
+            <li>Oil massage for hands</li>
+            <li>Body Butter with lymphatic strokes</li>
+            <li>Candle: luminous blend</li>
+          </ul>
+          <button class="btn ghost use-ritual">Apply</button>
+        </div>
+        <div class="ritual-card" data-phase="waning">
+          <h3>Waning</h3>
+          <p>Wind down & repair.</p>
+          <ul>
+            <li>Rich layer of balm before bed</li>
+            <li>Steam + Candle: unwind blend</li>
+            <li>Gratitude note</li>
+          </ul>
+          <button class="btn ghost use-ritual">Apply</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- STORY -->
+    <section id="story" class="story">
+      <div class="story-inner">
+        <header class="section-header">
+          <h2>Our Story</h2>
+          <p>Made in phases. Small-batch, planet-considerate, skin-first. We formulate in tiny runs so everything you touch is fresh.</p>
+        </header>
+        <div class="story-body">
+          <p>Moons Collective started with a single bottle of cuticle oil and a notebook of moon charts. We believe your routine should feel like a ritual — simple, sensory, and tuned to where you’re at.</p>
+          <p>Every jar and vial is blended with gentle, ingredient-forward bases and perfumed with subtle, mood-led accords. No parabens, no phthalates, no petrolatum — just thoughtful care for hands, lips, and skin.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- INGREDIENTS -->
+    <section id="ingredients" class="ingredients">
+      <header class="section-header">
+        <h2>Ingredients</h2>
+        <p>We prioritize botanicals and safe synthetics that actually do something.</p>
+      </header>
+      <div class="ingredient-cloud">
+        <button class="chip" data-note="Deeply moisturizing, sinks in fast">Jojoba</button>
+        <button class="chip" data-note="Antioxidant-rich, supports barrier">Vitamin E</button>
+        <button class="chip" data-note="Fluffy structure without grease">Shea</button>
+        <button class="chip" data-note="Lightweight emollient, silky">Meadowfoam</button>
+        <button class="chip" data-note="Plant wax, vegan">Candelilla</button>
+        <button class="chip" data-note="Coconut apricot wax, clean burn">Coconut Apricot</button>
+        <button class="chip" data-note="Subtle floral accord">Moonflower</button>
+      </div>
+      <div class="chip-note" id="chipNote" role="status" aria-live="polite"></div>
+    </section>
+
+    <!-- CONTACT / NEWSLETTER -->
+    <section id="contact" class="contact">
+      <header class="section-header">
+        <h2>Stay in Phase</h2>
+        <p>Get lunar drops, small-batch restocks, and journal prompts.</p>
+      </header>
+
+      <!-- Netlify newsletter form -->
+      <form name="newsletter" method="POST" data-netlify="true" netlify-honeypot="bot-field" class="form-card">
+        <input type="hidden" name="form-name" value="newsletter" />
+        <p class="hidden">
+          <label>Don’t fill this out if you're human: <input name="bot-field" /></label>
+        </p>
+        <label class="field">
+          <span>Email</span>
+          <input type="email" name="email" required placeholder="you@luna.com" />
+        </label>
+        <button class="btn primary" type="submit">Subscribe</button>
+      </form>
+
+      <!-- Netlify contact form -->
+      <form name="contact" method="POST" data-netlify="true" netlify-honeypot="bot-field" class="form-card">
+        <input type="hidden" name="form-name" value="contact" />
+        <p class="hidden">
+          <label>Don’t fill this out if you're human: <input name="bot-field" /></label>
+        </p>
+        <div class="grid-2">
+          <label class="field">
+            <span>Name</span>
+            <input type="text" name="name" required placeholder="Your name" />
+          </label>
+          <label class="field">
+            <span>Email</span>
+            <input type="email" name="email" required placeholder="you@luna.com" />
+          </label>
+        </div>
+        <label class="field">
+          <span>Message</span>
+          <textarea name="message" rows="4" required placeholder="Tell us what you’re dreaming up…"></textarea>
+        </label>
+        <button class="btn ghost" type="submit">Send</button>
+      </form>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <img src="./assets/logo-mark.svg" alt="" width="28" height="28" />
+        <strong>Moons Collective</strong>
+      </div>
+      <nav class="footer-nav" aria-label="Footer">
+        <a href="#shop">Shop</a>
+        <a href="#rituals">Rituals</a>
+        <a href="#story">Story</a>
+        <a href="#ingredients">Ingredients</a>
+        <a href="#contact">Contact</a>
+      </nav>
+      <div class="footer-copy">
+        © <span id="year"></span> Moons Collective • Made in phases
+      </div>
+    </div>
+  </footer>
+
+  <script src="./script.js" defer></script>
+</body>
+</html>
