@@ -14,53 +14,41 @@ function phaseLabel(d) {
   return "Waning Crescent";
 }
 
-// Map phase index (0..29) to accent gradient (aesthetic only)
+/** Brand-tuned accent sweep: stays between lavender and gold */
 function accentForDay(d) {
-  const t = Number(d) / 29;
-  const hue1 = 230 + 70 * t; // blue->purple
-  const hue2 = 280 + 40 * (1 - t); // purple->orchid
-  const c1 = `hsl(${hue1.toFixed(1)} 100% 75%)`;
-  const c2 = `hsl(${hue2.toFixed(1)} 80% 78%)`;
+  const t = Number(d) / 29; // 0..1
+  const hueLav = 258 + 6 * Math.sin(t * 2 * Math.PI);
+  const hueGold = 45 + 10 * Math.cos(t * 2 * Math.PI);
+  const c1 = `hsl(${hueLav.toFixed(1)} 90% 70%)`;   // lavender side
+  const c2 = `hsl(${hueGold.toFixed(1)} 85% 63%)`;  // gold side
   document.documentElement.style.setProperty("--accent", c1);
   document.documentElement.style.setProperty("--accent-2", c2);
 }
 
 /**
  * Move the shadow orb horizontally to simulate phase correctly.
- * Geometry notes:
- * - New Moon: shadow disc centered (x = 0) fully covers the lit disc => invisible.
- * - Full Moon: shadow disc moves completely off to the SIDE (|x| = 2R) => fully visible.
- * - First Quarter: x = -R (lit on RIGHT).
- * - Third Quarter: x = +R (lit on LEFT).
- * Piecewise cosine mapping ensures exact quarter positions and cycle continuity.
+ * - New: x = 0 (shadow centered)
+ * - First Quarter: x = -R
+ * - Full: x = -2R (shadow off left)
+ * - Third Quarter: x = +R
+ * - Back to New: x -> 0
  */
 function setMoonPhase(day) {
   const shadow = document.getElementById("shadowOrb");
   const nameEl = document.getElementById("phaseName");
 
   const d = clamp(0, Number(day), 29);
-  const f = d / 29; // normalized 0..1 across the synodic month
-  const R = 72;     // circle radius used in the SVG
+  const f = d / 29; // 0..1
+  const R = 72;
 
   let x;
   if (f <= 0.5) {
-    // Waxing: light grows on RIGHT -> move shadow LEFT (negative)
-    //  f=0   => 0 (New)
-    //  f=.25 => -R (First Quarter)
-    //  f=.5  => -2R (Full)
     x = R * (Math.cos(2 * Math.PI * f) - 1);
   } else {
-    // Waning: light remains on LEFT -> move shadow RIGHT (positive)
-    //  f=.5  => +2R (Full, still off-screen)
-    //  f=.75 => +R (Third Quarter)
-    //  f=1   => ~0 (approaching New)
     x = R * (1 - Math.cos(2 * Math.PI * f));
   }
-
   shadow.style.transform = `translateX(${x.toFixed(2)}px)`;
-
   nameEl.textContent = phaseLabel(d);
-
   accentForDay(d);
 }
 
@@ -100,7 +88,7 @@ function renderCart() {
     const li = document.createElement("li");
     li.className = "cart-item";
     li.innerHTML = `
-      <span class="dot" style="background: var(--accent)"></span>
+      <span class="dot" style="background: var(--brand-gold)"></span>
       <span>${item.name}</span>
       <div style="display:flex; gap:6px;">
         <button aria-label="Decrease" data-i="${i}" data-act="dec">−</button>
@@ -121,10 +109,9 @@ document.querySelectorAll(".product-card .add").forEach(btn => {
     const existing = cart.find(x => x.name === name);
     if (existing) existing.qty += 1; else cart.push({ name, qty: 1 });
     renderCart();
-    // micro confetti-ish ring
     card.animate([
       { transform: "scale(1)", filter: "brightness(1)" },
-      { transform: "scale(1.02)", filter: "brightness(1.3)" },
+      { transform: "scale(1.02)", filter: "brightness(1.2)" },
       { transform: "scale(1)", filter: "brightness(1)" }
     ], { duration: 360, easing: "cubic-bezier(.2,.7,.2,1)" });
   });
@@ -163,7 +150,6 @@ document.querySelectorAll(".use-ritual").forEach(btn => {
     cart.splice(0, cart.length);
     (map[phase] || []).forEach(n => cart.push({ name: n, qty: 1 }));
     renderCart();
-    // Push slider toward the quadrant
     const phaseTarget = { new: 0, waxing: 7, full: 14, waning: 21 }[phase] ?? 0;
     slider.value = phaseTarget;
     setMoonPhase(phaseTarget);
@@ -187,7 +173,7 @@ document.querySelectorAll(".chip").forEach(chip => {
 // Footer year
 document.getElementById("year").textContent = new Date().getFullYear();
 
-// Easter egg: press "M" for microgravity float on product cards
+// Easter egg: press "M" to float product cards
 window.addEventListener("keydown", (e) => {
   if (e.key.toLowerCase() === "m") {
     document.querySelectorAll(".product-card").forEach(card => {
