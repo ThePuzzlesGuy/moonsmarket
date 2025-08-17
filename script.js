@@ -14,33 +14,45 @@ function phaseLabel(d) {
   return "Waning Crescent";
 }
 
-/** Brand-tuned accent sweep */
+// Map phase index (0..29) to accent gradient (aesthetic only)
 function accentForDay(d) {
-  const t = Number(d) / 29; // 0..1
-  const hueLav = 258 + 6 * Math.sin(t * 2 * Math.PI);
-  const hueGold = 45 + 10 * Math.cos(t * 2 * Math.PI);
-  const c1 = `hsl(${hueLav.toFixed(1)} 90% 70%)`;
-  const c2 = `hsl(${hueGold.toFixed(1)} 85% 63%)`;
+  const t = Number(d) / 29;
+  const hue1 = 230 + 70 * t; // blue->purple
+  const hue2 = 280 + 40 * (1 - t); // purple->orchid
+  const c1 = `hsl(${hue1.toFixed(1)} 100% 75%)`;
+  const c2 = `hsl(${hue2.toFixed(1)} 80% 78%)`;
   document.documentElement.style.setProperty("--accent", c1);
   document.documentElement.style.setProperty("--accent-2", c2);
 }
 
-/** Move shadow horizontally to simulate phase */
+/**
+ * Move the shadow orb horizontally to simulate phase correctly.
+ * Geometry notes:
+ * - New Moon: shadow disc centered (x = 0) fully covers the lit disc => invisible.
+ * - Full Moon: shadow disc moves completely off to the SIDE (|x| = 2R) => fully visible.
+ * - First Quarter: x = -R (lit on RIGHT).
+ * - Third Quarter: x = +R (lit on LEFT).
+ * Piecewise cosine mapping ensures exact quarter positions and cycle continuity.
+ */
 function setMoonPhase(day) {
   const shadow = document.getElementById("shadowOrb");
   const nameEl = document.getElementById("phaseName");
 
   const d = clamp(0, Number(day), 29);
-  const f = d / 29;
-  const R = 72;
+  const f = d / 29; // normalized 0..1 across the synodic month
+  const R = 72;     // circle radius used in the SVG
 
   let x;
   if (f <= 0.5) {
-    x = R * (Math.cos(2 * Math.PI * f) - 1);
+    // Waxing: light grows on RIGHT -> move shadow LEFT (negative)
+    x = R * (Math.cos(2 * Math.PI * f) - 1); // 0 -> -2R
   } else {
-    x = R * (1 - Math.cos(2 * Math.PI * f));
+    // Waning: light remains on LEFT -> move shadow RIGHT (positive)
+    x = R * (1 - Math.cos(2 * Math.PI * f)); // +2R -> 0
   }
+
   shadow.style.transform = `translateX(${x.toFixed(2)}px)`;
+
   nameEl.textContent = phaseLabel(d);
   accentForDay(d);
 }
@@ -64,35 +76,24 @@ const slider = document.getElementById("phaseSlider");
 slider?.addEventListener("input", (e) => setMoonPhase(e.target.value));
 setMoonPhase(slider?.value || 0);
 
-// Cart state
+// Cart / "Ritual" micro-cart (drawer)
 const cart = [];
 const cartList = document.getElementById("cartItems");
-const cartButton = document.getElementById("cartButton");
-const cartDrawer = document.getElementById("cartDrawer");
-const cartOverlay = document.getElementById("cartOverlay");
 const cartCount = document.getElementById("cartCount");
+const drawer = document.getElementById("cartDrawer");
+const overlay = document.getElementById("cartOverlay");
+const openCartBtn = document.getElementById("cartButton");
+const closeCartBtn = document.getElementById("closeCart");
 
-function openCart(autoOpenFromAdd=false) {
-  cartDrawer.classList.add("open");
-  cartOverlay.hidden = false;
-  cartOverlay.classList.add("open");
-  // For side drawer, keep it open until closed or overlay clicked
-}
-function closeCart() {
-  cartDrawer.classList.remove("open");
-  cartOverlay.classList.remove("open");
-  setTimeout(() => cartOverlay.hidden = true, 180);
-}
-document.getElementById("closeCart")?.addEventListener("click", closeCart);
-cartButton?.addEventListener("click", () => openCart(false));
-cartOverlay?.addEventListener("click", closeCart);
-
-function cartQtyTotal() {
-  return cart.reduce((sum, it) => sum + it.qty, 0);
-}
+function openCart(){ overlay.classList.add("show"); drawer.classList.add("show"); }
+function closeCart(){ overlay.classList.remove("show"); drawer.classList.remove("show"); }
+openCartBtn?.addEventListener("click", openCart);
+closeCartBtn?.addEventListener("click", closeCart);
+overlay?.addEventListener("click", closeCart);
 
 function renderCart() {
   cartList.innerHTML = "";
+  let totalQty = 0;
   if (cart.length === 0) {
     const li = document.createElement("li");
     li.textContent = "Add products to craft your ritual.";
@@ -100,12 +101,13 @@ function renderCart() {
     cartList.appendChild(li);
   } else {
     cart.forEach((item, i) => {
+      totalQty += item.qty;
       const li = document.createElement("li");
       li.className = "cart-item";
       li.innerHTML = `
-        <span class="dot"></span>
+        <span class="dot" style="background: var(--accent)"></span>
         <span>${item.name}</span>
-        <div style="display:flex; gap:6px;">
+        <div style="display:flex; gap:6px; align-items:center;">
           <button aria-label="Decrease" data-i="${i}" data-act="dec">−</button>
           <span aria-live="polite">${item.qty}</span>
           <button aria-label="Increase" data-i="${i}" data-act="inc">+</button>
@@ -115,31 +117,27 @@ function renderCart() {
       cartList.appendChild(li);
     });
   }
-  cartCount.textContent = cartQtyTotal();
+  cartCount.textContent = String(totalQty);
 }
+renderCart();
 
-function addToCart(name, qty=1) {
-  const existing = cart.find(x => x.name === name);
-  if (existing) existing.qty += qty; else cart.push({ name, qty });
-  renderCart();
-  openCart(true);
-}
-
-// Product buttons
 document.querySelectorAll(".product-card .add").forEach(btn => {
   btn.addEventListener("click", (e) => {
     const card = e.currentTarget.closest(".product-card");
     const name = card.querySelector("h3").textContent.trim();
-    addToCart(name, 1);
+    const existing = cart.find(x => x.name === name);
+    if (existing) existing.qty += 1; else cart.push({ name, qty: 1 });
+    renderCart();
+    openCart(); // show drawer when adding
+    // micro confetti-ish ring
     card.animate([
       { transform: "scale(1)", filter: "brightness(1)" },
-      { transform: "scale(1.02)", filter: "brightness(1.2)" },
+      { transform: "scale(1.02)", filter: "brightness(1.3)" },
       { transform: "scale(1)", filter: "brightness(1)" }
     ], { duration: 360, easing: "cubic-bezier(.2,.7,.2,1)" });
   });
 });
 
-// Cart item controls
 cartList?.addEventListener("click", (e) => {
   const target = e.target;
   if (target.tagName !== "BUTTON") return;
@@ -160,27 +158,37 @@ document.getElementById("checkoutBtn")?.addEventListener("click", () => {
   alert("Netlify functions or a shop platform can plug in here.\nFor now, your ritual is ready ✨");
 });
 
-// Ritual presets: add a single line item named after the phase (not individual products)
+// Ritual presets -> add PHASE as a single cart line item (not individual products)
 document.querySelectorAll(".use-ritual").forEach(btn => {
   btn.addEventListener("click", (e) => {
-    const card = e.currentTarget.closest(".ritual-card");
-    const phaseName = card.querySelector("h3").textContent.trim(); // e.g., "New Moon", "Waxing"
-    addToCart(phaseName, 1);
-    const map = { "New Moon": 0, "Waxing": 7, "Full Moon": 14, "Waning": 21 };
-    const target = map[phaseName] ?? 0;
-    const slider = document.getElementById("phaseSlider");
-    slider.value = target;
-    setMoonPhase(target);
+    const phaseKey = e.currentTarget.closest(".ritual-card").dataset.phase;
+    const phaseMap = { new: "New Moon", waxing: "Waxing", full: "Full Moon", waning: "Waning" };
+    const name = phaseMap[phaseKey] || "Phase";
+    const existing = cart.find(x => x.name === name);
+    if (existing) existing.qty += 1; else cart.push({ name, qty: 1 });
+    renderCart();
+    openCart();
+    // Nudge slider to a representative day
+    const phaseTarget = { new: 0, waxing: 7, full: 14, waning: 21 }[phaseKey] ?? 0;
+    if (slider){ slider.value = phaseTarget; setMoonPhase(phaseTarget); }
   });
+});
+
+// Ingredient chips
+const chipNote = document.getElementById("chipNote");
+document.querySelectorAll(".chip").forEach(chip => {
+  chip.addEventListener("mouseenter", () => { chipNote.textContent = chip.dataset.note; });
+  chip.addEventListener("mouseleave", () => { chipNote.textContent = ""; });
+  chip.addEventListener("click", () => { chipNote.textContent = chip.dataset.note; });
 });
 
 // Footer year
 document.getElementById("year").textContent = new Date().getFullYear();
 
-// Easter egg: press "M" to float product + ritual cards
+// Easter egg: press "M" for microgravity float on product cards
 window.addEventListener("keydown", (e) => {
   if (e.key.toLowerCase() === "m") {
-    document.querySelectorAll(".product-card, .ritual-card").forEach(card => {
+    document.querySelectorAll(".product-card").forEach(card => {
       card.animate([
         { transform: "translateY(0)" },
         { transform: "translateY(-6px)" },
