@@ -151,7 +151,7 @@ section { padding: clamp(56px, 10vw, 100px) 20px; }
 @media (max-width: 1100px) { .product-grid { grid-template-columns: repeat(2, 1fr); } }
 @media (max-width: 560px) { .product-grid { grid-template-columns: 1fr; } }
 
-.product-card {
+.product-card { display: grid;
   border: 1px solid var(--border); border-radius: var(--radius);
   background: linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0.02));
   position: relative; overflow: hidden; isolation: isolate; box-shadow: var(--shadow);
@@ -163,12 +163,14 @@ section { padding: clamp(56px, 10vw, 100px) 20px; }
   z-index: -1; filter: blur(30px); transform: translateZ(0);
 }
 .product-card:hover { border-color: var(--brand-gold); }
-.card-body { padding: 16px; display: grid; gap: 6px; }
+.card-body { padding: 16px; display: grid; gap: 6px; position: relative; z-index: 1; grid-template-rows: max-content max-content 1fr max-content; min-height: 260px; }
 .sub { font-size: 14px; color: var(--muted); }
-.actions { margin-top: 6px; display: flex; gap: 10px; }
+.actions { margin-top: 0; display: flex; gap: 10px; align-self: end; }
 
 /* Phase ring updated to brand gradient */
 .phase-ring {
+  pointer-events: none;
+  z-index: 0;
   position: absolute; inset: 0;
   background: conic-gradient(from 90deg, var(--brand-lavender), var(--brand-gold), var(--brand-lavender));
   -webkit-mask: radial-gradient(circle at center, transparent 0 46%, #000 46% 53%, transparent 53%);
