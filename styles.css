@@ -1,106 +1,26 @@
-/* Updated styles.css with tighter section padding */
 
-:root {
-  --bg: #0b132b;
-  --bg-alt: #1c2541;
-  --fg: #f8f9fa;
-  --accent: #f4d35e;
-  --accent2: #ee964b;
-  --muted: #778da9;
-  --radius: 12px;
-}
-
+/* === BASE STYLES & PAGE LAYOUT === */
 body {
   margin: 0;
-  font-family: 'Manrope', sans-serif;
-  background: var(--bg);
-  color: var(--fg);
-  line-height: 1.6;
-}
-
-/* Sections: reduced padding */
-section {
-  padding: 3rem 1.5rem; /* was ~6rem before */
-}
-
-.section-header {
+  padding: 0;
   text-align: center;
-  margin-bottom: 2.5rem;
+  font-family: "Commissioner", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 500;
+  font-style: normal;
+  font-variation-settings:
+    "slnt" 0,
+    "FLAR" 0,
+    "VOLM" 0;
+  background: #0d1b2a; /* navy background */
+  color: #fff;
 }
 
-.section-header h2 {
-  font-family: 'Playfair Display', serif;
-  font-size: 2rem;
-  margin: 0 0 0.5rem;
-}
-
-.section-header p {
-  color: var(--muted);
-  font-size: 1rem;
-  max-width: 600px;
-  margin: 0 auto;
-}
-
-/* Buttons */
-.btn {
-  display: inline-block;
-  padding: 0.75rem 1.5rem;
-  border-radius: var(--radius);
-  font-weight: 600;
-  cursor: pointer;
-  border: none;
-  transition: all 0.2s ease;
-}
-
-.btn.primary {
-  background: linear-gradient(90deg, var(--accent), var(--accent2));
-  color: #000;
-}
-
-.btn.ghost {
-  background: transparent;
-  border: 1px solid var(--muted);
-  color: var(--fg);
-}
-
-.btn.primary:hover,
-.btn.ghost:hover {
-  opacity: 0.9;
-}
-
-/* Forms */
-.form-card {
-  background: var(--bg-alt);
-  border-radius: var(--radius);
-  padding: 1.5rem;
-  color: var(--fg);
-}
-
-.input-row {
-  display: flex;
-  gap: 0.5rem;
-  margin-top: 1rem;
-}
-
-input, textarea {
-  width: 100%;
-  padding: 0.75rem;
-  border-radius: var(--radius);
-  border: 1px solid var(--muted);
-  background: #0f1b33;
-  color: var(--fg);
-}
-
-input::placeholder,
-textarea::placeholder {
-  color: var(--muted);
-}
-
-/* Footer */
-.site-footer {
-  padding: 2rem 1.5rem;
-  background: var(--bg-alt);
+/* === FOOTER FIX === */
+footer {
+  margin-top: 60px; /* padding fix so it stays below content */
+  padding: 20px;
   text-align: center;
-  font-size: 0.875rem;
-  color: var(--muted);
+  font-size: 0.9rem;
+  color: #ccc;
 }
