@@ -360,3 +360,51 @@ input::placeholder, textarea::placeholder { color: var(--muted); }
 .cart-item .dot { margin-right: 6px; }
 .cart-item > span:nth-child(2){ display:inline-flex; align-items:center; gap:8px; }
 .cart-item button { padding: 6px 10px; border-radius: 10px; }
+
+/* Ensure product overlay ring never blocks clicks */
+.product-card { position: relative; }
+.product-card .card-body { position: relative; z-index: 1; }
+.phase-ring { pointer-events: none; z-index: 0; }
+
+/* Bottom-align the "Claim phase" buttons across ritual cards */
+.ritual-card{ display:grid; grid-template-rows:auto 1fr auto; }
+.ritual-card ul{ margin: 0 0 8px 18px; padding:0; }
+.ritual-card .use-ritual{ align-self:end; }
+
+/* Cart list alignment & tooltip */
+.cart-items{ align-content: start; grid-auto-rows: min-content; }
+.cart-item .name-tip{ display:inline-flex; align-items:center; gap:6px; }
+.info-tip{
+  position: relative;
+  display: inline-grid; place-items: center;
+  width: 16px; height: 16px; border-radius: 999px;
+  font-size: 11px; font-weight: 700; line-height: 1;
+  border: 1px solid var(--border);
+  background: rgba(255,255,255,0.08);
+  color: var(--text);
+  cursor: default;
+}
+.info-tip::after{
+  content: attr(data-tip);
+  white-space: pre-line;
+  position: absolute;
+  left: 50%; transform: translateX(-50%);
+  bottom: 140%;
+  min-width: 220px; max-width: 280px;
+  background: rgba(16,18,28,0.95);
+  color: #f4f4f6;
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 10px;
+  padding: 10px 12px;
+  box-shadow: 0 12px 30px rgba(0,0,0,0.45);
+  opacity: 0; pointer-events: none;
+  transition: opacity .15s ease;
+  z-index: 10;
+}
+.info-tip:hover::after, .info-tip:focus-visible::after{ opacity: 1; }
+:root.light .info-tip{ background: rgba(0,0,0,0.04); color:#111; border-color: rgba(0,0,0,0.2); }
+:root.light .info-tip::after{
+  background: #fff; color:#111;
+  border-color: rgba(0,0,0,0.2);
+  box-shadow: 0 12px 30px rgba(0,0,0,0.12);
+}

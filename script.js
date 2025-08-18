@@ -89,6 +89,14 @@ const cart = [];
 const cartList = document.getElementById("cartItems");
 const cartCount = document.getElementById("cartCount");
 const drawer = document.getElementById("cartDrawer");
+
+const PHASE_DETAILS = {
+  "New Moon": "Reset & nourish.\n• Cuticle Oil after shower\n• Body Butter on damp skin\n• Journal one intention",
+  "Waxing": "Build & protect.\n• Lip Balm throughout the day\n• Body Butter elbows/knees\n• Light Moon Candle: focus blend",
+  "Full Moon": "Glow & celebrate.\n• Oil revitalization for cuticles\n• Body Butter with sensual feeling\n• Candle: luminous blend",
+  "Waning": "Wind down & repair.\n• Rich layer of balm before bed\n• Steam + Candle: unwind blend\n• Gratitude note"
+};
+
 const overlay = document.getElementById("cartOverlay");
 const openCartBtn = document.getElementById("cartButton");
 const closeCartBtn = document.getElementById("closeCart");
