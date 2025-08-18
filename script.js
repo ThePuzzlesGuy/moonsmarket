@@ -290,3 +290,19 @@ window.addEventListener("keydown", (e) => {
     if (document.hidden) layer.innerHTML = '';
   });
 })();
+// Delegated handler for product add (robust to markup changes)
+document.addEventListener("click", (e) => {
+  const btn = e.target.closest(".product-card .add");
+  if (!btn) return;
+  const card = btn.closest(".product-card");
+  const name = card.querySelector("h3").textContent.trim();
+  const existing = cart.find(x => x.name === name);
+  if (existing) existing.qty += 1; else cart.push({ name, qty: 1 });
+  renderCart();
+  openCart();
+  card.animate([
+    { transform: "scale(1)", filter: "brightness(1)" },
+    { transform: "scale(1.02)", filter: "brightness(1.3)" },
+    { transform: "scale(1)", filter: "brightness(1)" }
+  ], { duration: 360, easing: "cubic-bezier(.2,.7,.2,1)" });
+});
