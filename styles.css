@@ -6,6 +6,7 @@
    - Product card buttons pinned to bottom (consistent alignment)
    - Newsletter/Contact cards styled with badges and tighter spacing
    - Color theme tuned toward your label palette (deep navy, royal, gold/cream, lavender)
+   - NEW: Subtle pixie-dust cursor trail via #sparkleLayer
 */
 
 /* --- Reset / base --- */
@@ -299,3 +300,29 @@ input::placeholder, textarea::placeholder { color: var(--muted); }
 
 /* --- Focus styles --- */
 :focus-visible { outline: 2px solid var(--accent-2); outline-offset: 2px; }
+
+
+/* === Pixie Dust Cursor Layer === */
+#sparkleLayer{
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1000;
+}
+
+.sparkle{
+  position: absolute;
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  /* soft radial dot with subtle glow */
+  background: radial-gradient(circle at 40% 40%, currentColor 0 40%, transparent 60%);
+  filter: blur(0.2px) drop-shadow(0 0 4px currentColor);
+  opacity: 0.9;
+  will-change: transform, opacity;
+  mix-blend-mode: screen;
+}
+
+/* Keep it subtle on users who prefer less motion */
+@media (prefers-reduced-motion: reduce){
+  #sparkleLayer{ display:none; }
+}

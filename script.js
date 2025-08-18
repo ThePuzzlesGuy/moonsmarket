@@ -205,3 +205,84 @@ window.addEventListener("keydown", (e) => {
     });
   }
 });
+
+
+/* === Pixie Dust Cursor Trail === */
+(function(){
+  const layer = document.getElementById('sparkleLayer');
+  if (!layer) return;
+
+  // Respect reduced motion
+  const media = window.matchMedia('(prefers-reduced-motion: reduce)');
+  if (media.matches) return;
+
+  let lastTime = 0;
+  const minDelay = 40; // ms between sparkles -> sparse
+  const maxAge = 900;  // lifetime of each sparkle
+  const drift = 24;    // px drift radius
+
+  function rand(min, max){ return Math.random() * (max - min) + min; }
+
+  function makeSparkle(x, y){
+    const s = document.createElement('span');
+    s.className = 'sparkle';
+
+    // small random size for airy look
+    const size = rand(2, 5);
+    s.style.width = size + 'px';
+    s.style.height = size + 'px';
+
+    // lavender/cream/white palette with slight variance
+    const hues = [
+      'rgba(255,255,255,0.95)',
+      'rgba(255,245,225,0.9)',
+      'rgba(210,190,255,0.95)'
+    ];
+    s.style.color = hues[(Math.random()*hues.length)|0];
+
+    // initial position
+    s.style.left = (x - size/2) + 'px';
+    s.style.top  = (y - size/2) + 'px';
+
+    layer.appendChild(s);
+
+    // random drift + fade with WAAPI for performance
+    const dx = rand(-drift, drift);
+    const dy = rand(-drift, drift);
+    const rot = rand(-40, 40);
+
+    s.animate(
+      [
+        { transform: 'translate(0,0) rotate(0deg) scale(1)', opacity: 0.9 },
+        { transform: `translate(${dx}px, ${dy}px) rotate(${rot}deg) scale(${rand(0.6, 1.2)})`, opacity: 0 }
+      ],
+      {
+        duration: maxAge + rand(-200, 250),
+        easing: 'cubic-bezier(.2,.7,.2,1)',
+        fill: 'forwards'
+      }
+    ).addEventListener('finish', () => s.remove());
+  }
+
+  window.addEventListener('pointermove', (e) => {
+    const now = performance.now();
+    if (now - lastTime < minDelay) return;
+    lastTime = now;
+
+    // world coords
+    const x = e.clientX;
+    const y = e.clientY;
+
+    // emit 1–2 sparkles sporadically
+    const count = Math.random() < 0.25 ? 2 : 1;
+    for (let i=0;i<count;i++){
+      // tiny offset so it looks organic
+      makeSparkle(x + rand(-2, 2), y + rand(-2, 2));
+    }
+  }, { passive: true });
+
+  // Clean up sparkles on visibility change (avoid buildup if tab backgrounded)
+  document.addEventListener('visibilitychange', () => {
+    if (document.hidden) layer.innerHTML = '';
+  });
+})();
