@@ -71,10 +71,18 @@ toggle?.addEventListener("click", () => {
   updateThemeButtonColors();
 })();
 
-// Initialize moon slider
+// Initialize moon slider (random start, skipping New Moon)
+// Day range is 0..29; pick 1..29 to avoid bland 'New Moon' starting look.
 const slider = document.getElementById("phaseSlider");
-slider?.addEventListener("input", (e) => setMoonPhase(e.target.value));
-setMoonPhase(slider?.value || 0);
+if (slider){
+  const randomStart = Math.floor(Math.random() * 29) + 1; // 1..29
+  slider.value = String(randomStart);
+  setMoonPhase(randomStart);
+  slider.addEventListener("input", (e) => setMoonPhase(e.target.value));
+} else {
+  // Fallback in case slider isn't present for some reason
+  setMoonPhase(14);
+}
 
 // Cart / "Ritual" micro-cart (drawer)
 const cart = [];
@@ -269,19 +277,15 @@ window.addEventListener("keydown", (e) => {
     if (now - lastTime < minDelay) return;
     lastTime = now;
 
-    // world coords
     const x = e.clientX;
     const y = e.clientY;
 
-    // emit 1–2 sparkles sporadically
     const count = Math.random() < 0.25 ? 2 : 1;
     for (let i=0;i<count;i++){
-      // tiny offset so it looks organic
       makeSparkle(x + rand(-2, 2), y + rand(-2, 2));
     }
   }, { passive: true });
 
-  // Clean up sparkles on visibility change (avoid buildup if tab backgrounded)
   document.addEventListener('visibilitychange', () => {
     if (document.hidden) layer.innerHTML = '';
   });
