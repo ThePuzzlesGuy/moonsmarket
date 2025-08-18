@@ -113,6 +113,17 @@ openCartBtn?.addEventListener("click", openCart);
 closeCartBtn?.addEventListener("click", closeCart);
 overlay?.addEventListener("click", closeCart);
 
+
+  function phaseDetails(name){
+    const map = {
+      "New Moon": ["Cuticle Oil after shower","Body Butter on damp skin","Journal one intention"],
+      "Waxing": ["Lip Balm throughout the day","Body Butter elbows/knees","Light Moon Candle: focus blend"],
+      "Full Moon": ["Oil revitalization for cuticles","Body Butter with sensual feeling","Candle: luminous blend"],
+      "Waning": ["Rich layer of balm before bed","Steam + Candle: unwind blend","Gratitude note"]
+    };
+    return map[name] || null;
+  }
+
 function renderCart() {
   cartList.innerHTML = "";
   let totalQty = 0;
@@ -128,7 +139,7 @@ function renderCart() {
       li.className = "cart-item";
       li.innerHTML = `
         <span class="dot" style="background: var(--accent)"></span>
-        <span>${item.name}</span>
+        <span class="item-name"></span>
         <div style="display:flex; gap:6px; align-items:center;">
           <button aria-label="Decrease" data-i="${i}" data-act="dec">−</button>
           <span aria-live="polite">${item.qty}</span>
@@ -136,6 +147,23 @@ function renderCart() {
           <button aria-label="Remove" data-i="${i}" data-act="rem">✕</button>
         </div>
       `;
+
+      const nameSpan = li.querySelector('.item-name');
+      nameSpan.textContent = item.name;
+      const details = phaseDetails(item.name);
+      if (details){
+        const info = document.createElement('span');
+        info.className = 'phase-info';
+        info.setAttribute('tabindex','0');
+        info.setAttribute('aria-label','Phase details');
+        info.textContent = 'i';
+        const tip = document.createElement('div');
+        tip.className = 'phase-tip';
+        tip.innerHTML = `<h4>${item.name}</h4><ul>${details.map(d=>`<li>${d}</li>`).join('')}</ul>`;
+        info.appendChild(tip);
+        nameSpan.after(info);
+      }
+
       cartList.appendChild(li);
     });
   }
