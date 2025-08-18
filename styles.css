@@ -326,3 +326,31 @@ input::placeholder, textarea::placeholder { color: var(--muted); }
 @media (prefers-reduced-motion: reduce){
   #sparkleLayer{ display:none; }
 }
+
+
+:root.light .cart-drawer {
+  background: #fff;
+  color: #000;
+}
+:root.light .cart-drawer .cart-item {
+  background: rgba(0,0,0,0.05);
+  color: #000;
+}
+:root.light .cart-drawer button {
+  color: #000;
+  border-color: rgba(0,0,0,0.2);
+}
+:root.light .cart-drawer .cart-header,
+:root.light .cart-drawer .cart-footer {
+  border-color: rgba(0,0,0,0.2);
+}
+
+
+/* Cart icon mask uses currentColor so it flips with theme */
+.icon-cart{
+  display:inline-block;
+  width: 20px; height: 20px;
+  background-color: currentColor;
+  -webkit-mask: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'><path fill='black' d='M7 18a2 2 0 1 0 0 4 2 2 0 0 0 0-4m10 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4M3 4h1.2c.5 0 .94.33 1.08.8l.3 1H21a1 1 0 0 1 .98 1.2l-1.4 7A2 2 0 0 1 18.62 16H9.08a2 2 0 0 1-1.95-1.56L5.1 6H3.5a1 1 0 1 1 0-2z'/></svg>") center/contain no-repeat;
+          mask: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'><path fill='black' d='M7 18a2 2 0 1 0 0 4 2 2 0 0 0 0-4m10 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4M3 4h1.2c.5 0 .94.33 1.08.8l.3 1H21a1 1 0 0 1 .98 1.2l-1.4 7A2 2 0 0 1 18.62 16H9.08a2 2 0 0 1-1.95-1.56L5.1 6H3.5a1 1 0 1 1 0-2z'/></svg>") center/contain no-repeat;
+}
