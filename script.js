@@ -101,6 +101,32 @@ const overlay = document.getElementById("cartOverlay");
 const openCartBtn = document.getElementById("cartButton");
 const closeCartBtn = document.getElementById("closeCart");
 
+
+// Cart bundle definitions for phases
+const PHASE_BUNDLES = {
+  "New Moon": [
+    "Cuticle Oil after shower",
+    "Body Butter on damp skin",
+    "Journal one intention"
+  ],
+  "Waxing": [
+    "Lip Balm throughout the day",
+    "Body Butter elbows/knees",
+    "Light Moon Candle: focus blend"
+  ],
+  "Full Moon": [
+    "Oil revitialization for cuticles",
+    "Body Butter with sensual feeling",
+    "Candle: luminous blend"
+  ],
+  "Waning": [
+    "Rich layer of balm before bed",
+    "Steam + Candle: unwind blend",
+    "Gratitude note"
+  ]
+};
+
+
 function openCart(){
   drawer.classList.add("open");
   overlay.hidden = false;
@@ -124,6 +150,7 @@ overlay?.addEventListener("click", closeCart);
     return map[name] || null;
   }
 
+
 function renderCart() {
   cartList.innerHTML = "";
   let totalQty = 0;
@@ -137,31 +164,33 @@ function renderCart() {
       totalQty += item.qty;
       const li = document.createElement("li");
       li.className = "cart-item";
-      li.innerHTML = `
-        <span class="dot" style="background: var(--accent)"></span>
-        <span class="item-name"></span>
+
+      const isPhase = Boolean(PHASE_BUNDLES[item.name]);
+      const infoBtn = isPhase ? `<button class="expand-btn" aria-expanded="false" aria-controls="bundle-${i}" data-i="${i}" data-act="toggle">i</button>` : "";
+
+      // Row
+      const row = document.createElement("div");
+      row.className = "cart-item-row";
+      row.innerHTML = `
+        <span class="dot" style="background: var(--accent-2)"></span>
+        <span><strong>${item.name}</strong></span>
         <div style="display:flex; gap:6px; align-items:center;">
+          ${infoBtn}
           <button aria-label="Decrease" data-i="${i}" data-act="dec">−</button>
           <span aria-live="polite">${item.qty}</span>
           <button aria-label="Increase" data-i="${i}" data-act="inc">+</button>
           <button aria-label="Remove" data-i="${i}" data-act="rem">✕</button>
         </div>
       `;
+      li.appendChild(row);
 
-      const nameSpan = li.querySelector('.item-name');
-      nameSpan.textContent = item.name;
-      const details = phaseDetails(item.name);
-      if (details){
-        const info = document.createElement('span');
-        info.className = 'phase-info';
-        info.setAttribute('tabindex','0');
-        info.setAttribute('aria-label','Phase details');
-        info.textContent = 'i';
-        const tip = document.createElement('div');
-        tip.className = 'phase-tip';
-        tip.innerHTML = `<h4>${item.name}</h4><ul>${details.map(d=>`<li>${d}</li>`).join('')}</ul>`;
-        info.appendChild(tip);
-        nameSpan.after(info);
+      if (isPhase) {
+        const det = document.createElement("div");
+        det.className = "bundle-details";
+        det.id = `bundle-${i}`;
+        const bullets = PHASE_BUNDLES[item.name].map(t => `<li>${t}</li>`).join("");
+        det.innerHTML = `<ul>${bullets}</ul>`;
+        li.appendChild(det);
       }
 
       cartList.appendChild(li);
@@ -187,10 +216,26 @@ document.querySelectorAll(".product-card .add").forEach(btn => {
   });
 });
 
+
 cartList?.addEventListener("click", (e) => {
   const target = e.target;
   if (target.tagName !== "BUTTON") return;
   const i = Number(target.dataset.i);
+  const act = target.dataset.act;
+
+  if (act === "toggle") {
+    const details = document.getElementById(`bundle-${i}`);
+    if (!details) return;
+    const open = details.classList.toggle("open");
+    target.setAttribute("aria-expanded", open ? "true" : "false");
+    return;
+  }
+
+  if (act === "inc") cart[i].qty += 1;
+  if (act === "dec") cart[i].qty = Math.max(1, cart[i].qty - 1);
+  if (act === "rem") cart.splice(i, 1);
+  renderCart();
+});
   const act = target.dataset.act;
   if (act === "inc") cart[i].qty += 1;
   if (act === "dec") cart[i].qty = Math.max(1, cart[i].qty - 1);

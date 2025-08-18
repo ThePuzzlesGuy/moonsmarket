@@ -461,3 +461,38 @@ input::placeholder, textarea::placeholder { color: var(--muted); }
 .cart-item .phase-tip ul{ margin:0; padding-left:18px; font-size:13px; }
 
 .product-card .actions .btn{ position:relative; z-index:2; }
+
+/* --- Cart bundle expand/collapse --- */
+.cart-item-row{
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 10px;
+  align-items: center;
+}
+.expand-btn{
+  display: inline-grid;
+  place-items: center;
+  width: 22px; height: 22px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: transparent;
+  cursor: pointer;
+  color: inherit;
+  font-size: 14px;
+  opacity: .9;
+}
+.expand-btn:hover{ border-color: var(--accent-2); }
+.bundle-details{
+  grid-column: 1 / -1;
+  margin-top: 8px;
+  border-top: 1px dashed var(--border);
+  padding-top: 8px;
+  overflow: hidden;
+  max-height: 0;
+  transition: max-height .25s ease;
+}
+.bundle-details.open{
+  max-height: 200px; /* sufficient to show 3 bullets */
+}
+.bundle-details ul{ margin: 0; padding-left: 18px; color: var(--muted); }
+.bundle-details li{ margin: 4px 0; }
