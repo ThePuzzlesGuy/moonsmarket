@@ -33,14 +33,14 @@ function setMoonPhase(day) {
   const nameEl = document.getElementById("phaseName");
 
   const d = clamp(0, Number(day), 29);
-  const f = d / 29; // normalized 0..1
+  const f = d / 29;
   const R = 72;
 
   let x;
   if (f <= 0.5) {
-    x = R * (Math.cos(2 * Math.PI * f) - 1); // waxing
+    x = R * (Math.cos(2 * Math.PI * f) - 1);
   } else {
-    x = R * (1 - Math.cos(2 * Math.PI * f)); // waning
+    x = R * (1 - Math.cos(2 * Math.PI * f));
   }
 
   shadow.style.transform = `translateX(${x.toFixed(2)}px)`;
@@ -51,16 +51,24 @@ function setMoonPhase(day) {
 
 // Theme toggle
 const toggle = document.getElementById("themeToggle");
+function updateThemeButtonColors() {
+  const root = document.documentElement;
+  const isLight = root.classList.contains("light");
+  toggle.style.color = isLight ? "black" : "white";
+  document.getElementById("cartButton").style.color = isLight ? "black" : "white";
+}
 toggle?.addEventListener("click", () => {
   const root = document.documentElement;
   root.classList.toggle("light");
   localStorage.setItem("theme", root.classList.contains("light") ? "light" : "dark");
+  updateThemeButtonColors();
 });
 
 // Initialize theme from storage
 (function(){
   const t = localStorage.getItem("theme");
   if (t === "light") document.documentElement.classList.add("light");
+  updateThemeButtonColors();
 })();
 
 // Initialize moon slider
