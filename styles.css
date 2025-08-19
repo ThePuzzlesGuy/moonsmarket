@@ -1,12 +1,4 @@
-/* Moons Market — FULL styles.css
-   Updated to match latest index.html you provided.
-   Changes in this version:
-   - Halved vertical padding between sections
-   - Stronger frosted side cart (backdrop + tint)
-   - Product card buttons pinned to bottom (consistent alignment)
-   - Newsletter/Contact cards styled with badges and tighter spacing
-   - Color theme tuned toward your label palette (deep navy, royal, gold/cream, lavender)
-*/
+/* Moons Market — styles.css (full) */
 
 /* --- Reset / base --- */
 * { box-sizing: border-box; }
@@ -63,7 +55,6 @@ h2 { font-size: clamp(26px, 4vw, 42px); }
 h3 { font-size: clamp(18px, 2.2vw, 24px); }
 
 p { margin: 0 0 14px; color: var(--muted); }
-
 a { color: inherit; text-decoration: none; }
 
 .btn {
@@ -79,8 +70,14 @@ a { color: inherit; text-decoration: none; }
 .btn.ghost { background: transparent; border: 1px solid var(--border); }
 .icon-btn { background: transparent; color: white; border: 1px solid var(--border); width: 40px; height: 40px; border-radius: 10px; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; }
 .icon-btn:hover { border-color: var(--accent); }
-[data-theme="dark"] .icon-btn {
-  color: black;
+
+/* Cart icon mask uses currentColor */
+.icon-cart{
+  display:inline-block;
+  width: 20px; height: 20px;
+  background-color: currentColor;
+  -webkit-mask: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'><path fill='black' d='M7 18a2 2 0 1 0 0 4 2 2 0 0 0 0-4m10 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4M3 4h1.2c.5 0 .94.33 1.08.8l.3 1H21a1 1 0 0 1 .98 1.2l-1.4 7A 2 2 0 0 1 18.62 16H9.08a2 2 0 0 1-1.95-1.56L5.1 6H3.5a1 1 0 1 1 0-2z'/></svg>") center/contain no-repeat;
+          mask: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'><path fill='black' d='M7 18a2 2 0 1 0 0 4 2 2 0 0 0 0-4m10 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4M3 4h1.2c.5 0 .94.33 1.08.8l.3 1H21a1 1 0 0 1 .98 1.2l-1.4 7A 2 2 0 0 1 18.62 16H9.08a2 2 0 0 1-1.95-1.56L5.1 6H3.5a1 1 0 1 1 0-2z'/></svg>") center/contain no-repeat;
 }
 
 /* --- Header --- */
@@ -101,7 +98,7 @@ a { color: inherit; text-decoration: none; }
 .icon-moon::before { content: "◑"; font-size: 18px; transform: translateY(-1px); }
 
 /* --- Hero --- */
-.hero { position: relative; padding: clamp(28px, 4vw, 48px) 20px 50px; } /* tighter */
+.hero { position: relative; padding: clamp(28px, 4vw, 48px) 20px 50px; }
 .hero-inner { display: grid; grid-template-columns: 1.2fr 1fr; gap: 36px; align-items: center; max-width: 1200px; margin: 0 auto; }
 @media (max-width: 900px) { .hero-inner { grid-template-columns: 1fr; } }
 .headline-top { display: block; font-size: clamp(16px, 2.2vw, 22px); color: var(--muted); text-transform: uppercase; letter-spacing: 3px; margin-bottom: 8px; }
@@ -130,7 +127,7 @@ a { color: inherit; text-decoration: none; }
 }
 
 /* --- Moon module --- */
-.moon-module { display: grid; justify-items: center; gap: 14px; } /* tighter */
+.moon-module { display: grid; justify-items: center; gap: 14px; }
 .moon { width: min(360px, 70vw); height: auto; }
 .moon-base { fill: #0b0d15; }
 .moon-lit { fill: var(--moon-lit); }
@@ -144,8 +141,8 @@ input[type="range"] { width: 100%; }
 .scroll-cue:hover { opacity: 1; }
 
 /* --- Sections (global) --- */
-section { padding: clamp(36px, 6vw, 56px) 20px; } /* half-ish of former spacing */
-.section-header { text-align: center; max-width: 900px; margin: 0 auto 18px; } /* tighter */
+section { padding: clamp(36px, 6vw, 56px) 20px; }
+.section-header { text-align: center; max-width: 900px; margin: 0 auto 18px; }
 .section-header p { margin-top: 4px; }
 
 /* --- Shop --- */
@@ -169,9 +166,10 @@ section { padding: clamp(36px, 6vw, 56px) 20px; } /* half-ish of former spacing 
   z-index: -1; filter: blur(28px); transform: translateZ(0);
 }
 .product-card:hover { border-color: var(--accent-2); }
-.card-body { padding: 16px; display: grid; gap: 6px; }
+.card-body { position: relative; z-index: 1; padding: 16px; display: grid; gap: 6px; }
 .sub { font-size: 14px; color: var(--muted); }
 .actions { margin-top: 6px; display: flex; gap: 10px; align-self: end; }
+.actions .btn { position: relative; z-index: 2; }
 
 .phase-ring {
   position: absolute; inset: 0;
@@ -179,23 +177,54 @@ section { padding: clamp(36px, 6vw, 56px) 20px; } /* half-ish of former spacing 
   -webkit-mask: radial-gradient(circle at center, transparent 0 46%, #000 46% 53%, transparent 53%);
   mask: radial-gradient(circle at center, transparent 0 46%, #000 46% 53%, transparent 53%);
   opacity: .35; filter: blur(0.4px);
+  z-index: 0; pointer-events: none;
 }
 
 /* --- Rituals --- */
-.rituals .ritual-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 14px; max-width: 1200px; margin: 0 auto; }
+.rituals .ritual-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 16px; max-width: 1200px; margin: 0 auto; }
 @media (max-width: 1100px) { .rituals .ritual-grid { grid-template-columns: repeat(2,1fr); } }
 @media (max-width: 560px) { .rituals .ritual-grid { grid-template-columns: 1fr; } }
 
 .ritual-card {
-  border: 1px solid var(--border); border-radius: var(--radius); padding: 16px; background: var(--card); box-shadow: var(--shadow);
+  border: 1px solid var(--border); border-radius: var(--radius);
+  background: linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0.02));
+  box-shadow: var(--shadow);
   position: relative; overflow: hidden;
+  display: grid; grid-template-rows: auto 1fr auto; /* button pinned bottom */
+  gap: 8px;
+  padding: 16px;
+  isolation: isolate;
 }
-.ritual-card::before {
-  /* moon silhouette behind card, varies by :nth-child as a simple effect */
-  content: ""; position: absolute; inset: 0; opacity: .25; pointer-events: none; filter: blur(1px);
+/* Phase moon graphic in corner */
+.ritual-card .phase-moon{
+  position: absolute; right: 14px; top: 14px; width: 72px; height: 72px; border-radius: 50%;
+  background: var(--moon-lit); opacity: .1; filter: blur(.2px);
+  z-index: 0; pointer-events: none;
+}
+/* New = mostly dark */
+.ritual-card[data-phase="new"] .phase-moon{
+  background: radial-gradient(circle at 50% 50%, rgba(255,255,255,0.08) 0 40%, transparent 41%),
+              radial-gradient(circle at 50% 50%, rgba(0,0,0,0.6) 0 60%, transparent 61%);
+  opacity: .4;
+}
+/* Full = lit disc */
+.ritual-card[data-phase="full"] .phase-moon{
+  background: radial-gradient(circle at 50% 50%, rgba(255,255,255,0.28) 0 60%, transparent 61%);
+  opacity: .5;
+}
+/* Waxing = right-lit crescent */
+.ritual-card[data-phase="waxing"] .phase-moon{
   background:
-    radial-gradient(circle at 75% 28%, rgba(181,153,255,0.25) 0 18%, transparent 20%),
-    radial-gradient(circle at 30% 60%, rgba(201,178,107,0.18) 0 22%, transparent 24%);
+    radial-gradient(circle at 60% 50%, rgba(255,255,255,0.28) 0 50%, transparent 51%),
+    radial-gradient(circle at 45% 50%, rgba(0,0,0,0.5) 0 50%, transparent 51%);
+  opacity: .45;
+}
+/* Waning = left-lit crescent */
+.ritual-card[data-phase="waning"] .phase-moon{
+  background:
+    radial-gradient(circle at 40% 50%, rgba(255,255,255,0.28) 0 50%, transparent 51%),
+    radial-gradient(circle at 55% 50%, rgba(0,0,0,0.5) 0 50%, transparent 51%);
+  opacity: .45;
 }
 
 /* --- Story --- */
@@ -215,7 +244,7 @@ section { padding: clamp(36px, 6vw, 56px) 20px; } /* half-ish of former spacing 
 .chip:hover { border-color: var(--accent-2); transform: translateY(-1px); }
 .chip-note { text-align: center; margin-top: 10px; min-height: 22px; color: var(--muted); }
 
-/* --- CTA (Newsletter / Contact) --- */
+/* --- CTA --- */
 .contact .cta-grid {
   display: grid; grid-template-columns: 1fr 1fr; gap: 16px;
   max-width: 1000px; margin: 0 auto;
@@ -230,9 +259,7 @@ section { padding: clamp(36px, 6vw, 56px) 20px; } /* half-ish of former spacing 
   padding: 16px;
   display: grid; gap: 10px;
 }
-.card-pop {
-  position: relative; overflow: hidden;
-}
+.card-pop { position: relative; overflow: hidden; }
 .card-pop::after {
   content: ""; position: absolute; inset: -30% -30% auto auto; height: 60%; width: 60%;
   background: radial-gradient(closest-side, rgba(181,153,255,0.28), transparent);
@@ -270,7 +297,7 @@ input::placeholder, textarea::placeholder { color: var(--muted); }
 .footer-nav { display: flex; gap: 14px; }
 .footer-copy { color: var(--muted); }
 
-/* --- Cart Drawer (side, frosty) --- */
+/* --- Cart Drawer --- */
 .cart-overlay {
   position: fixed; inset: 0; background: rgba(0,0,0,0.35);
   backdrop-filter: blur(3px);
@@ -291,23 +318,47 @@ input::placeholder, textarea::placeholder { color: var(--muted); }
 }
 .cart-drawer.open { transform: translateX(0); }
 .cart-header { display: flex; justify-content: space-between; align-items: center; padding: 14px 14px; border-bottom: 1px solid var(--border); }
-.cart-items { list-style: none; padding: 14px; margin: 0; display: grid; gap: 8px; overflow: auto; }
-.cart-item { display: grid; grid-template-columns: auto 1fr auto; gap: 10px; align-items: center; padding: 10px; border: 1px solid var(--border); border-radius: 12px; background: rgba(255,255,255,0.05); }
+.cart-items { list-style: none; padding: 14px; margin: 0; display: grid; gap: 8px; overflow: auto; align-content: start; grid-auto-rows: min-content; }
+.cart-item { display: grid; grid-template-columns: auto 1fr auto; gap: 10px; align-items: center; padding: 10px; border: 1px solid var(--border); border-radius: 12px; background: rgba(255,255,255,0.05); position: relative; }
 .cart-item .dot { width: 10px; height: 10px; border-radius: 999px; background: var(--accent-2); }
 .cart-item button { background: transparent; border: 1px solid var(--border); border-radius: 10px; padding: 6px 10px; cursor: pointer; color: var(--text); }
+
+/* Expandable details (for phases) */
+.cart-item .expand{
+  margin-left: 6px; width: 22px; height: 22px; border-radius: 8px; font-size: 12px; line-height: 1; display:inline-grid; place-items:center;
+}
+.cart-item .details{
+  grid-column: 1 / -1; margin-top: 8px; border-top: 1px dashed var(--border);
+  overflow: hidden; max-height: 0; transition: max-height .25s ease;
+}
+.cart-item .details.open{ max-height: 180px; }
+.cart-item .details ul{ margin: 8px 0 0 22px; color: var(--muted); }
+
 .cart-footer { display: flex; justify-content: space-between; gap: 10px; padding: 12px 14px; border-top: 1px solid var(--border); }
+
+/* Light mode cart drawer */
+:root.light .cart-overlay{ background: rgba(0,0,0,0.2); }
+:root.light .cart-drawer{
+  background: rgba(255,255,255,0.96);
+  color: #111;
+  border-left: 1px solid rgba(0,0,0,0.12);
+}
+:root.light .cart-header, :root.light .cart-footer{ border-color: rgba(0,0,0,0.12); }
+:root.light .cart-items .cart-item{ background: rgba(0,0,0,0.04); border-color: rgba(0,0,0,0.12); }
+:root.light .cart-item button{ color: #111; border-color: rgba(0,0,0,0.2); }
+:root.light .icon-btn{ color: #000; border-color: rgba(0,0,0,0.2); }
 
 /* --- Focus styles --- */
 :focus-visible { outline: 2px solid var(--accent-2); outline-offset: 2px; }
 
-/* Ensure phase ring never blocks clicks */
-.phase-ring{ pointer-events:none; z-index:0; }
-.product-card .card-body{ position:relative; z-index:1; }
-.product-card .actions .btn{ position:relative; z-index:2; }
-
-/* Cart line expandable details for phase bundles */
-.cart-item .expander{ margin-left:6px; width:22px; height:22px; border-radius:8px; display:inline-flex; align-items:center; justify-content:center; font-weight:700; opacity:.8; }
-.cart-item .expander:focus-visible{ outline:2px solid var(--accent-2); outline-offset:2px; }
-.cart-item .details{ overflow:hidden; max-height:0; transition:max-height .25s ease; }
-.cart-item[aria-expanded="true"] .details{ max-height:220px; }
-.cart-item .details ul{ margin:8px 0 0 26px; padding:0; color:var(--muted); }
+/* === Pixie Dust Cursor Layer === */
+#sparkleLayer{
+  position: fixed; inset: 0; pointer-events: none; z-index: 1000;
+}
+.sparkle{
+  position: absolute; width: 6px; height: 6px; border-radius: 50%;
+  background: radial-gradient(circle at 40% 40%, currentColor 0 40%, transparent 60%);
+  filter: blur(0.2px) drop-shadow(0 0 4px currentColor);
+  opacity: 0.9; will-change: transform, opacity; mix-blend-mode: screen;
+}
+@media (prefers-reduced-motion: reduce){ #sparkleLayer{ display:none; } }

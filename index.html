@@ -175,6 +175,7 @@
 
       <div class="ritual-grid">
         <div class="ritual-card" data-phase="new">
+          <div class="phase-moon" aria-hidden="true"></div>
           <h3>New Moon</h3>
           <p>Reset &amp; nourish.</p>
           <ul>
@@ -182,9 +183,10 @@
             <li>Body Butter on damp skin</li>
             <li>Journal one intention</li>
           </ul>
-          <button class="btn ghost use-ritual">Apply</button>
+          <button class="btn ghost use-ritual">Claim phase</button>
         </div>
         <div class="ritual-card" data-phase="waxing">
+          <div class="phase-moon" aria-hidden="true"></div>
           <h3>Waxing</h3>
           <p>Build &amp; protect.</p>
           <ul>
@@ -192,9 +194,10 @@
             <li>Body Butter elbows/knees</li>
             <li>Light Moon Candle: focus blend</li>
           </ul>
-          <button class="btn ghost use-ritual">Apply</button>
+          <button class="btn ghost use-ritual">Claim phase</button>
         </div>
         <div class="ritual-card" data-phase="full">
+          <div class="phase-moon" aria-hidden="true"></div>
           <h3>Full Moon</h3>
           <p>Glow &amp; celebrate.</p>
           <ul>
@@ -202,9 +205,10 @@
             <li>Body Butter with sensual feeling</li>
             <li>Candle: luminous blend</li>
           </ul>
-          <button class="btn ghost use-ritual">Apply</button>
+          <button class="btn ghost use-ritual">Claim phase</button>
         </div>
         <div class="ritual-card" data-phase="waning">
+          <div class="phase-moon" aria-hidden="true"></div>
           <h3>Waning</h3>
           <p>Wind down &amp; repair.</p>
           <ul>
@@ -212,7 +216,7 @@
             <li>Steam + Candle: unwind blend</li>
             <li>Gratitude note</li>
           </ul>
-          <button class="btn ghost use-ritual">Apply</button>
+          <button class="btn ghost use-ritual">Claim phase</button>
         </div>
       </div>
     </section>
@@ -334,6 +338,9 @@
       <button class="btn primary" id="checkoutBtn">Proceed</button>
     </div>
   </aside>
+
+  <!-- Pixie Dust Cursor Layer -->
+  <div id="sparkleLayer" aria-hidden="true"></div>
 
   <script src="./script.js" defer></script>
 </body>
