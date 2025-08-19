@@ -232,11 +232,10 @@ document.getElementById("clearCart")?.addEventListener("click", () => {
 });
 
 // Shopify cart redirect (dedicated page)
-// IMPORTANT: Replace SHOPIFY.domain and each VARIANT_ID_* with your real values.
 const SHOPIFY = {
-  domain: '0rd0wb-79.myshopify.com', // <-- your .myshopify.com domain
+  domain: '0rd0wb-79.myshopify.com',
   variants: {
-    'Cuticle Oil': '7715725574253',
+    'Cuticle Oil': 'cuticle-oil',
     'Whipped Body Butter': 'VARIANT_ID_2',
     'Lip Balm': 'VARIANT_ID_3',
     'Moon Candle': 'VARIANT_ID_4',
