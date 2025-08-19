@@ -232,7 +232,7 @@ document.getElementById("clearCart")?.addEventListener("click", () => {
 
 // Shopify cart redirect (dedicated page)
 const SHOPIFY = {
-  domain: 'YOURSHOP.myshopify.com', // TODO: replace
+  domain: '0rd0wb-79.myshopify.com',
   variants: {
     'Cuticle Oil': 'VARIANT_ID_1',
     'Whipped Body Butter': 'VARIANT_ID_2',
