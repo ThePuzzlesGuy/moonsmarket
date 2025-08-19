@@ -54,8 +54,9 @@ const toggle = document.getElementById("themeToggle");
 function updateThemeButtonColors() {
   const root = document.documentElement;
   const isLight = root.classList.contains("light");
-  toggle.style.color = isLight ? "black" : "white";
-  document.getElementById("cartButton").style.color = isLight ? "black" : "white";
+  if (toggle) toggle.style.color = isLight ? "black" : "white";
+  const cartBtn = document.getElementById("cartButton");
+  if (cartBtn) cartBtn.style.color = isLight ? "black" : "white";
 }
 toggle?.addEventListener("click", () => {
   const root = document.documentElement;
@@ -65,7 +66,7 @@ toggle?.addEventListener("click", () => {
 });
 
 // Initialize theme from storage
-(function(){
+(function () {
   const t = localStorage.getItem("theme");
   if (t === "light") document.documentElement.classList.add("light");
   updateThemeButtonColors();
@@ -74,7 +75,7 @@ toggle?.addEventListener("click", () => {
 // Initialize moon slider (random start, skipping New Moon)
 // Day range is 0..29; pick 1..29 to avoid bland 'New Moon' starting look.
 const slider = document.getElementById("phaseSlider");
-if (slider){
+if (slider) {
   const randomStart = Math.floor(Math.random() * 29) + 1; // 1..29
   slider.value = String(randomStart);
   setMoonPhase(randomStart);
@@ -101,37 +102,35 @@ const overlay = document.getElementById("cartOverlay");
 const openCartBtn = document.getElementById("cartButton");
 const closeCartBtn = document.getElementById("closeCart");
 
-
 // Cart bundle definitions for phases
 const PHASE_BUNDLES = {
   "New Moon": [
     "Cuticle Oil after shower",
     "Body Butter on damp skin",
-    "Journal one intention"
+    "Journal one intention",
   ],
-  "Waxing": [
+  Waxing: [
     "Lip Balm throughout the day",
     "Body Butter elbows/knees",
-    "Light Moon Candle: focus blend"
+    "Light Moon Candle: focus blend",
   ],
   "Full Moon": [
-    "Oil revitialization for cuticles",
+    "Oil revitalization for cuticles",
     "Body Butter with sensual feeling",
-    "Candle: luminous blend"
+    "Candle: luminous blend",
   ],
-  "Waning": [
+  Waning: [
     "Rich layer of balm before bed",
     "Steam + Candle: unwind blend",
-    "Gratitude note"
-  ]
+    "Gratitude note",
+  ],
 };
 
-
-function openCart(){
+function openCart() {
   drawer.classList.add("open");
   overlay.hidden = false;
 }
-function closeCart(){
+function closeCart() {
   drawer.classList.remove("open");
   overlay.hidden = true;
 }
@@ -139,17 +138,31 @@ openCartBtn?.addEventListener("click", openCart);
 closeCartBtn?.addEventListener("click", closeCart);
 overlay?.addEventListener("click", closeCart);
 
-
-  function phaseDetails(name){
-    const map = {
-      "New Moon": ["Cuticle Oil after shower","Body Butter on damp skin","Journal one intention"],
-      "Waxing": ["Lip Balm throughout the day","Body Butter elbows/knees","Light Moon Candle: focus blend"],
-      "Full Moon": ["Oil revitalization for cuticles","Body Butter with sensual feeling","Candle: luminous blend"],
-      "Waning": ["Rich layer of balm before bed","Steam + Candle: unwind blend","Gratitude note"]
-    };
-    return map[name] || null;
-  }
-
+function phaseDetails(name) {
+  const map = {
+    "New Moon": [
+      "Cuticle Oil after shower",
+      "Body Butter on damp skin",
+      "Journal one intention",
+    ],
+    Waxing: [
+      "Lip Balm throughout the day",
+      "Body Butter elbows/knees",
+      "Light Moon Candle: focus blend",
+    ],
+    "Full Moon": [
+      "Oil revitalization for cuticles",
+      "Body Butter with sensual feeling",
+      "Candle: luminous blend",
+    ],
+    Waning: [
+      "Rich layer of balm before bed",
+      "Steam + Candle: unwind blend",
+      "Gratitude note",
+    ],
+  };
+  return map[name] || null;
+}
 
 function renderCart() {
   cartList.innerHTML = "";
@@ -166,7 +179,9 @@ function renderCart() {
       li.className = "cart-item";
 
       const isPhase = Boolean(PHASE_BUNDLES[item.name]);
-      const infoBtn = isPhase ? `<button class="expand-btn" aria-expanded="false" aria-controls="bundle-${i}" data-i="${i}" data-act="toggle">i</button>` : "";
+      const infoBtn = isPhase
+        ? `<button class="expand-btn" aria-expanded="false" aria-controls="bundle-${i}" data-i="${i}" data-act="toggle">i</button>`
+        : "";
 
       // Row
       const row = document.createElement("div");
@@ -188,7 +203,9 @@ function renderCart() {
         const det = document.createElement("div");
         det.className = "bundle-details";
         det.id = `bundle-${i}`;
-        const bullets = PHASE_BUNDLES[item.name].map(t => `<li>${t}</li>`).join("");
+        const bullets = PHASE_BUNDLES[item.name]
+          .map((t) => `<li>${t}</li>`)
+          .join("");
         det.innerHTML = `<ul>${bullets}</ul>`;
         li.appendChild(det);
       }
@@ -200,23 +217,28 @@ function renderCart() {
 }
 renderCart();
 
-document.querySelectorAll(".product-card .add").forEach(btn => {
+// Direct listeners on visible product buttons
+document.querySelectorAll(".product-card .add").forEach((btn) => {
   btn.addEventListener("click", (e) => {
     const card = e.currentTarget.closest(".product-card");
     const name = card.querySelector("h3").textContent.trim();
-    const existing = cart.find(x => x.name === name);
-    if (existing) existing.qty += 1; else cart.push({ name, qty: 1 });
+    const existing = cart.find((x) => x.name === name);
+    if (existing) existing.qty += 1;
+    else cart.push({ name, qty: 1 });
     renderCart();
     openCart();
-    card.animate([
-      { transform: "scale(1)", filter: "brightness(1)" },
-      { transform: "scale(1.02)", filter: "brightness(1.3)" },
-      { transform: "scale(1)", filter: "brightness(1)" }
-    ], { duration: 360, easing: "cubic-bezier(.2,.7,.2,1)" });
+    card.animate(
+      [
+        { transform: "scale(1)", filter: "brightness(1)" },
+        { transform: "scale(1.02)", filter: "brightness(1.3)" },
+        { transform: "scale(1)", filter: "brightness(1)" },
+      ],
+      { duration: 360, easing: "cubic-bezier(.2,.7,.2,1)" }
+    );
   });
 });
 
-
+// Cart controls (increment / decrement / remove + expand bundles)
 cartList?.addEventListener("click", (e) => {
   const target = e.target;
   if (target.tagName !== "BUTTON") return;
@@ -236,12 +258,6 @@ cartList?.addEventListener("click", (e) => {
   if (act === "rem") cart.splice(i, 1);
   renderCart();
 });
-  const act = target.dataset.act;
-  if (act === "inc") cart[i].qty += 1;
-  if (act === "dec") cart[i].qty = Math.max(1, cart[i].qty - 1);
-  if (act === "rem") cart.splice(i, 1);
-  renderCart();
-});
 
 document.getElementById("clearCart")?.addEventListener("click", () => {
   cart.splice(0, cart.length);
@@ -249,30 +265,47 @@ document.getElementById("clearCart")?.addEventListener("click", () => {
 });
 
 document.getElementById("checkoutBtn")?.addEventListener("click", () => {
-  alert("Netlify functions or a shop platform can plug in here.\nFor now, your ritual is ready ✨");
+  alert(
+    "Netlify functions or a shop platform can plug in here.\nFor now, your ritual is ready ✨"
+  );
 });
 
 // Ritual presets
-document.querySelectorAll(".use-ritual").forEach(btn => {
+document.querySelectorAll(".use-ritual").forEach((btn) => {
   btn.addEventListener("click", (e) => {
     const phaseKey = e.currentTarget.closest(".ritual-card").dataset.phase;
-    const phaseMap = { new: "New Moon", waxing: "Waxing", full: "Full Moon", waning: "Waning" };
+    const phaseMap = {
+      new: "New Moon",
+      waxing: "Waxing",
+      full: "Full Moon",
+      waning: "Waning",
+    };
     const name = phaseMap[phaseKey] || "Phase";
-    const existing = cart.find(x => x.name === name);
-    if (existing) existing.qty += 1; else cart.push({ name, qty: 1 });
+    const existing = cart.find((x) => x.name === name);
+    if (existing) existing.qty += 1;
+    else cart.push({ name, qty: 1 });
     renderCart();
     openCart();
     const phaseTarget = { new: 0, waxing: 7, full: 14, waning: 21 }[phaseKey] ?? 0;
-    if (slider){ slider.value = phaseTarget; setMoonPhase(phaseTarget); }
+    if (slider) {
+      slider.value = phaseTarget;
+      setMoonPhase(phaseTarget);
+    }
   });
 });
 
 // Ingredient chips
 const chipNote = document.getElementById("chipNote");
-document.querySelectorAll(".chip").forEach(chip => {
-  chip.addEventListener("mouseenter", () => { chipNote.textContent = chip.dataset.note; });
-  chip.addEventListener("mouseleave", () => { chipNote.textContent = ""; });
-  chip.addEventListener("click", () => { chipNote.textContent = chip.dataset.note; });
+document.querySelectorAll(".chip").forEach((chip) => {
+  chip.addEventListener("mouseenter", () => {
+    chipNote.textContent = chip.dataset.note;
+  });
+  chip.addEventListener("mouseleave", () => {
+    chipNote.textContent = "";
+  });
+  chip.addEventListener("click", () => {
+    chipNote.textContent = chip.dataset.note;
+  });
 });
 
 // Footer year
@@ -282,7 +315,7 @@ document.getElementById("year").textContent = new Date().getFullYear();
 window.addEventListener("keydown", (e) => {
   if (e.key.toLowerCase() === "m") {
     const els = document.querySelectorAll("body *:not(script):not(style)");
-    els.forEach(el => {
+    els.forEach((el) => {
       el.style.transition = "transform 15s linear, opacity 15s linear";
       const dx = (Math.random() - 0.5) * 2000;
       const dy = (Math.random() - 0.5) * 2000;
@@ -295,43 +328,44 @@ window.addEventListener("keydown", (e) => {
   }
 });
 
-
 /* === Pixie Dust Cursor Trail === */
-(function(){
-  const layer = document.getElementById('sparkleLayer');
+(function () {
+  const layer = document.getElementById("sparkleLayer");
   if (!layer) return;
 
   // Respect reduced motion
-  const media = window.matchMedia('(prefers-reduced-motion: reduce)');
+  const media = window.matchMedia("(prefers-reduced-motion: reduce)");
   if (media.matches) return;
 
   let lastTime = 0;
   const minDelay = 40; // ms between sparkles -> sparse
-  const maxAge = 900;  // lifetime of each sparkle
-  const drift = 24;    // px drift radius
+  const maxAge = 900; // lifetime of each sparkle
+  const drift = 24; // px drift radius
 
-  function rand(min, max){ return Math.random() * (max - min) + min; }
+  function rand(min, max) {
+    return Math.random() * (max - min) + min;
+  }
 
-  function makeSparkle(x, y){
-    const s = document.createElement('span');
-    s.className = 'sparkle';
+  function makeSparkle(x, y) {
+    const s = document.createElement("span");
+    s.className = "sparkle";
 
     // small random size for airy look
     const size = rand(2, 5);
-    s.style.width = size + 'px';
-    s.style.height = size + 'px';
+    s.style.width = size + "px";
+    s.style.height = size + "px";
 
     // lavender/cream/white palette with slight variance
     const hues = [
-      'rgba(255,255,255,0.95)',
-      'rgba(255,245,225,0.9)',
-      'rgba(210,190,255,0.95)'
+      "rgba(255,255,255,0.95)",
+      "rgba(255,245,225,0.9)",
+      "rgba(210,190,255,0.95)",
     ];
-    s.style.color = hues[(Math.random()*hues.length)|0];
+    s.style.color = hues[(Math.random() * hues.length) | 0];
 
     // initial position
-    s.style.left = (x - size/2) + 'px';
-    s.style.top  = (y - size/2) + 'px';
+    s.style.left = x - size / 2 + "px";
+    s.style.top = y - size / 2 + "px";
 
     layer.appendChild(s);
 
@@ -342,48 +376,63 @@ window.addEventListener("keydown", (e) => {
 
     s.animate(
       [
-        { transform: 'translate(0,0) rotate(0deg) scale(1)', opacity: 0.9 },
-        { transform: `translate(${dx}px, ${dy}px) rotate(${rot}deg) scale(${rand(0.6, 1.2)})`, opacity: 0 }
+        { transform: "translate(0,0) rotate(0deg) scale(1)", opacity: 0.9 },
+        {
+          transform: `translate(${dx}px, ${dy}px) rotate(${rot}deg) scale(${rand(
+            0.6,
+            1.2
+          )})`,
+          opacity: 0,
+        },
       ],
       {
         duration: maxAge + rand(-200, 250),
-        easing: 'cubic-bezier(.2,.7,.2,1)',
-        fill: 'forwards'
+        easing: "cubic-bezier(.2,.7,.2,1)",
+        fill: "forwards",
       }
-    ).addEventListener('finish', () => s.remove());
+    ).addEventListener("finish", () => s.remove());
   }
 
-  window.addEventListener('pointermove', (e) => {
-    const now = performance.now();
-    if (now - lastTime < minDelay) return;
-    lastTime = now;
+  window.addEventListener(
+    "pointermove",
+    (e) => {
+      const now = performance.now();
+      if (now - lastTime < minDelay) return;
+      lastTime = now;
 
-    const x = e.clientX;
-    const y = e.clientY;
+      const x = e.clientX;
+      const y = e.clientY;
 
-    const count = Math.random() < 0.25 ? 2 : 1;
-    for (let i=0;i<count;i++){
-      makeSparkle(x + rand(-2, 2), y + rand(-2, 2));
-    }
-  }, { passive: true });
+      const count = Math.random() < 0.25 ? 2 : 1;
+      for (let i = 0; i < count; i++) {
+        makeSparkle(x + rand(-2, 2), y + rand(-2, 2));
+      }
+    },
+    { passive: true }
+  );
 
-  document.addEventListener('visibilitychange', () => {
-    if (document.hidden) layer.innerHTML = '';
+  document.addEventListener("visibilitychange", () => {
+    if (document.hidden) layer.innerHTML = "";
   });
 })();
+
 // Delegated handler for product add (robust to markup changes)
 document.addEventListener("click", (e) => {
   const btn = e.target.closest(".product-card .add");
   if (!btn) return;
   const card = btn.closest(".product-card");
   const name = card.querySelector("h3").textContent.trim();
-  const existing = cart.find(x => x.name === name);
-  if (existing) existing.qty += 1; else cart.push({ name, qty: 1 });
+  const existing = cart.find((x) => x.name === name);
+  if (existing) existing.qty += 1;
+  else cart.push({ name, qty: 1 });
   renderCart();
   openCart();
-  card.animate([
-    { transform: "scale(1)", filter: "brightness(1)" },
-    { transform: "scale(1.02)", filter: "brightness(1.3)" },
-    { transform: "scale(1)", filter: "brightness(1)" }
-  ], { duration: 360, easing: "cubic-bezier(.2,.7,.2,1)" });
+  card.animate(
+    [
+      { transform: "scale(1)", filter: "brightness(1)" },
+      { transform: "scale(1.02)", filter: "brightness(1.3)" },
+      { transform: "scale(1)", filter: "brightness(1)" },
+    ],
+    { duration: 360, easing: "cubic-bezier(.2,.7,.2,1)" }
+  );
 });
