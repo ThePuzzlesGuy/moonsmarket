@@ -3,7 +3,8 @@ const clamp = (min, val, max) => Math.min(max, Math.max(min, val));
 
 /** Phase label helper (8 principal phases) */
 function phaseLabel(d) {
-  const day = clamp(1, Math.round(Number(d)), 29); // guard to 1..29 for labels
+  // Use true 0..29 for labeling so 0 and 29 both read "New Moon"
+  const day = clamp(0, Math.round(Number(d)), 29);
   if (day === 0 || day === 29) return "New Moon";
   if (day < 7) return "Waxing Crescent";
   if (day === 7) return "First Quarter";
@@ -213,7 +214,7 @@ cartList?.addEventListener("click", (e) => {
     target.setAttribute("aria-expanded", String(!expanded));
     if (panel){
       if (expanded){ panel.classList.remove("open"); panel.hidden = true; }
-      else { panel.hidden = false; /* trigger transition */ panel.classList.add("open"); }
+      else { panel.hidden = false; panel.classList.add("open"); }
     }
     return;
   }
@@ -231,8 +232,9 @@ document.getElementById("clearCart")?.addEventListener("click", () => {
 });
 
 // Shopify cart redirect (dedicated page)
+// IMPORTANT: Replace SHOPIFY.domain and each VARIANT_ID_* with your real values.
 const SHOPIFY = {
-  domain: '0rd0wb-79.myshopify.com',
+  domain: '0rd0wb-79.myshopify.com', // <-- your .myshopify.com domain
   variants: {
     'Cuticle Oil': 'VARIANT_ID_1',
     'Whipped Body Butter': 'VARIANT_ID_2',
@@ -256,8 +258,9 @@ document.getElementById("checkoutBtn")?.addEventListener("click", () => {
     alert("Your ritual is empty or items aren’t mapped to Shopify yet.");
     return;
   }
-  const url = `https://${0rd0wb-79.myshopify.com}/cart/${pairs.join(",")}`;
-  window.location.href = url; // navigate to full Shopify cart page
+  // Build a dedicated Shopify cart URL (no popout)
+  const url = `https://${SHOPIFY.domain}/cart/${pairs.join(",")}`;
+  window.location.href = url;
 });
 
 // Pixie dust cursor trail
