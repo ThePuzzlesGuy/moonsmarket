@@ -236,7 +236,7 @@ document.getElementById("clearCart")?.addEventListener("click", () => {
 const SHOPIFY = {
   domain: '0rd0wb-79.myshopify.com', // <-- your .myshopify.com domain
   variants: {
-    'Cuticle Oil': 'VARIANT_ID_1',
+    'Cuticle Oil': '7715725574253',
     'Whipped Body Butter': 'VARIANT_ID_2',
     'Lip Balm': 'VARIANT_ID_3',
     'Moon Candle': 'VARIANT_ID_4',
