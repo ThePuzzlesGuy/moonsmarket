@@ -54,9 +54,8 @@ const toggle = document.getElementById("themeToggle");
 function updateThemeButtonColors() {
   const root = document.documentElement;
   const isLight = root.classList.contains("light");
-  if (toggle) toggle.style.color = isLight ? "black" : "white";
-  const cartBtn = document.getElementById("cartButton");
-  if (cartBtn) cartBtn.style.color = isLight ? "black" : "white";
+  toggle.style.color = isLight ? "black" : "white";
+  document.getElementById("cartButton").style.color = isLight ? "black" : "white";
 }
 toggle?.addEventListener("click", () => {
   const root = document.documentElement;
@@ -66,103 +65,37 @@ toggle?.addEventListener("click", () => {
 });
 
 // Initialize theme from storage
-(function () {
+(function(){
   const t = localStorage.getItem("theme");
   if (t === "light") document.documentElement.classList.add("light");
   updateThemeButtonColors();
 })();
 
-// Initialize moon slider (random start, skipping New Moon)
-// Day range is 0..29; pick 1..29 to avoid bland 'New Moon' starting look.
+// Initialize moon slider
 const slider = document.getElementById("phaseSlider");
-if (slider) {
-  const randomStart = Math.floor(Math.random() * 29) + 1; // 1..29
-  slider.value = String(randomStart);
-  setMoonPhase(randomStart);
-  slider.addEventListener("input", (e) => setMoonPhase(e.target.value));
-} else {
-  // Fallback in case slider isn't present for some reason
-  setMoonPhase(14);
-}
+slider?.addEventListener("input", (e) => setMoonPhase(e.target.value));
+setMoonPhase(slider?.value || 0);
 
 // Cart / "Ritual" micro-cart (drawer)
 const cart = [];
 const cartList = document.getElementById("cartItems");
 const cartCount = document.getElementById("cartCount");
 const drawer = document.getElementById("cartDrawer");
-
-const PHASE_DETAILS = {
-  "New Moon": "Reset & nourish.\n• Cuticle Oil after shower\n• Body Butter on damp skin\n• Journal one intention",
-  "Waxing": "Build & protect.\n• Lip Balm throughout the day\n• Body Butter elbows/knees\n• Light Moon Candle: focus blend",
-  "Full Moon": "Glow & celebrate.\n• Oil revitalization for cuticles\n• Body Butter with sensual feeling\n• Candle: luminous blend",
-  "Waning": "Wind down & repair.\n• Rich layer of balm before bed\n• Steam + Candle: unwind blend\n• Gratitude note"
-};
-
 const overlay = document.getElementById("cartOverlay");
 const openCartBtn = document.getElementById("cartButton");
 const closeCartBtn = document.getElementById("closeCart");
 
-// Cart bundle definitions for phases
-const PHASE_BUNDLES = {
-  "New Moon": [
-    "Cuticle Oil after shower",
-    "Body Butter on damp skin",
-    "Journal one intention",
-  ],
-  Waxing: [
-    "Lip Balm throughout the day",
-    "Body Butter elbows/knees",
-    "Light Moon Candle: focus blend",
-  ],
-  "Full Moon": [
-    "Oil revitalization for cuticles",
-    "Body Butter with sensual feeling",
-    "Candle: luminous blend",
-  ],
-  Waning: [
-    "Rich layer of balm before bed",
-    "Steam + Candle: unwind blend",
-    "Gratitude note",
-  ],
-};
-
-function openCart() {
+function openCart(){
   drawer.classList.add("open");
   overlay.hidden = false;
 }
-function closeCart() {
+function closeCart(){
   drawer.classList.remove("open");
   overlay.hidden = true;
 }
 openCartBtn?.addEventListener("click", openCart);
 closeCartBtn?.addEventListener("click", closeCart);
 overlay?.addEventListener("click", closeCart);
-
-function phaseDetails(name) {
-  const map = {
-    "New Moon": [
-      "Cuticle Oil after shower",
-      "Body Butter on damp skin",
-      "Journal one intention",
-    ],
-    Waxing: [
-      "Lip Balm throughout the day",
-      "Body Butter elbows/knees",
-      "Light Moon Candle: focus blend",
-    ],
-    "Full Moon": [
-      "Oil revitalization for cuticles",
-      "Body Butter with sensual feeling",
-      "Candle: luminous blend",
-    ],
-    Waning: [
-      "Rich layer of balm before bed",
-      "Steam + Candle: unwind blend",
-      "Gratitude note",
-    ],
-  };
-  return map[name] || null;
-}
 
 function renderCart() {
   cartList.innerHTML = "";
@@ -177,39 +110,16 @@ function renderCart() {
       totalQty += item.qty;
       const li = document.createElement("li");
       li.className = "cart-item";
-
-      const isPhase = Boolean(PHASE_BUNDLES[item.name]);
-      const infoBtn = isPhase
-        ? `<button class="expand-btn" aria-expanded="false" aria-controls="bundle-${i}" data-i="${i}" data-act="toggle">i</button>`
-        : "";
-
-      // Row
-      const row = document.createElement("div");
-      row.className = "cart-item-row";
-      row.innerHTML = `
-        <span class="dot" style="background: var(--accent-2)"></span>
-        <span><strong>${item.name}</strong></span>
+      li.innerHTML = `
+        <span class="dot" style="background: var(--accent)"></span>
+        <span>${item.name}</span>
         <div style="display:flex; gap:6px; align-items:center;">
-          ${infoBtn}
           <button aria-label="Decrease" data-i="${i}" data-act="dec">−</button>
           <span aria-live="polite">${item.qty}</span>
           <button aria-label="Increase" data-i="${i}" data-act="inc">+</button>
           <button aria-label="Remove" data-i="${i}" data-act="rem">✕</button>
         </div>
       `;
-      li.appendChild(row);
-
-      if (isPhase) {
-        const det = document.createElement("div");
-        det.className = "bundle-details";
-        det.id = `bundle-${i}`;
-        const bullets = PHASE_BUNDLES[item.name]
-          .map((t) => `<li>${t}</li>`)
-          .join("");
-        det.innerHTML = `<ul>${bullets}</ul>`;
-        li.appendChild(det);
-      }
-
       cartList.appendChild(li);
     });
   }
@@ -217,42 +127,27 @@ function renderCart() {
 }
 renderCart();
 
-// Direct listeners on visible product buttons
-document.querySelectorAll(".product-card .add").forEach((btn) => {
+document.querySelectorAll(".product-card .add").forEach(btn => {
   btn.addEventListener("click", (e) => {
     const card = e.currentTarget.closest(".product-card");
     const name = card.querySelector("h3").textContent.trim();
-    const existing = cart.find((x) => x.name === name);
-    if (existing) existing.qty += 1;
-    else cart.push({ name, qty: 1 });
+    const existing = cart.find(x => x.name === name);
+    if (existing) existing.qty += 1; else cart.push({ name, qty: 1 });
     renderCart();
     openCart();
-    card.animate(
-      [
-        { transform: "scale(1)", filter: "brightness(1)" },
-        { transform: "scale(1.02)", filter: "brightness(1.3)" },
-        { transform: "scale(1)", filter: "brightness(1)" },
-      ],
-      { duration: 360, easing: "cubic-bezier(.2,.7,.2,1)" }
-    );
+    card.animate([
+      { transform: "scale(1)", filter: "brightness(1)" },
+      { transform: "scale(1.02)", filter: "brightness(1.3)" },
+      { transform: "scale(1)", filter: "brightness(1)" }
+    ], { duration: 360, easing: "cubic-bezier(.2,.7,.2,1)" });
   });
 });
 
-// Cart controls (increment / decrement / remove + expand bundles)
 cartList?.addEventListener("click", (e) => {
   const target = e.target;
   if (target.tagName !== "BUTTON") return;
   const i = Number(target.dataset.i);
   const act = target.dataset.act;
-
-  if (act === "toggle") {
-    const details = document.getElementById(`bundle-${i}`);
-    if (!details) return;
-    const open = details.classList.toggle("open");
-    target.setAttribute("aria-expanded", open ? "true" : "false");
-    return;
-  }
-
   if (act === "inc") cart[i].qty += 1;
   if (act === "dec") cart[i].qty = Math.max(1, cart[i].qty - 1);
   if (act === "rem") cart.splice(i, 1);
@@ -264,48 +159,29 @@ document.getElementById("clearCart")?.addEventListener("click", () => {
   renderCart();
 });
 
-document.getElementById("checkoutBtn")?.addEventListener("click", () => {
-  alert(
-    "Netlify functions or a shop platform can plug in here.\nFor now, your ritual is ready ✨"
-  );
 });
 
 // Ritual presets
-document.querySelectorAll(".use-ritual").forEach((btn) => {
+document.querySelectorAll(".use-ritual").forEach(btn => {
   btn.addEventListener("click", (e) => {
     const phaseKey = e.currentTarget.closest(".ritual-card").dataset.phase;
-    const phaseMap = {
-      new: "New Moon",
-      waxing: "Waxing",
-      full: "Full Moon",
-      waning: "Waning",
-    };
+    const phaseMap = { new: "New Moon", waxing: "Waxing", full: "Full Moon", waning: "Waning" };
     const name = phaseMap[phaseKey] || "Phase";
-    const existing = cart.find((x) => x.name === name);
-    if (existing) existing.qty += 1;
-    else cart.push({ name, qty: 1 });
+    const existing = cart.find(x => x.name === name);
+    if (existing) existing.qty += 1; else cart.push({ name, qty: 1 });
     renderCart();
     openCart();
     const phaseTarget = { new: 0, waxing: 7, full: 14, waning: 21 }[phaseKey] ?? 0;
-    if (slider) {
-      slider.value = phaseTarget;
-      setMoonPhase(phaseTarget);
-    }
+    if (slider){ slider.value = phaseTarget; setMoonPhase(phaseTarget); }
   });
 });
 
 // Ingredient chips
 const chipNote = document.getElementById("chipNote");
-document.querySelectorAll(".chip").forEach((chip) => {
-  chip.addEventListener("mouseenter", () => {
-    chipNote.textContent = chip.dataset.note;
-  });
-  chip.addEventListener("mouseleave", () => {
-    chipNote.textContent = "";
-  });
-  chip.addEventListener("click", () => {
-    chipNote.textContent = chip.dataset.note;
-  });
+document.querySelectorAll(".chip").forEach(chip => {
+  chip.addEventListener("mouseenter", () => { chipNote.textContent = chip.dataset.note; });
+  chip.addEventListener("mouseleave", () => { chipNote.textContent = ""; });
+  chip.addEventListener("click", () => { chipNote.textContent = chip.dataset.note; });
 });
 
 // Footer year
@@ -315,7 +191,7 @@ document.getElementById("year").textContent = new Date().getFullYear();
 window.addEventListener("keydown", (e) => {
   if (e.key.toLowerCase() === "m") {
     const els = document.querySelectorAll("body *:not(script):not(style)");
-    els.forEach((el) => {
+    els.forEach(el => {
       el.style.transition = "transform 15s linear, opacity 15s linear";
       const dx = (Math.random() - 0.5) * 2000;
       const dy = (Math.random() - 0.5) * 2000;
@@ -328,111 +204,36 @@ window.addEventListener("keydown", (e) => {
   }
 });
 
-/* === Pixie Dust Cursor Trail === */
-(function () {
-  const layer = document.getElementById("sparkleLayer");
-  if (!layer) return;
-
-  // Respect reduced motion
-  const media = window.matchMedia("(prefers-reduced-motion: reduce)");
-  if (media.matches) return;
-
-  let lastTime = 0;
-  const minDelay = 40; // ms between sparkles -> sparse
-  const maxAge = 900; // lifetime of each sparkle
-  const drift = 24; // px drift radius
-
-  function rand(min, max) {
-    return Math.random() * (max - min) + min;
+// === Shopify Checkout Redirect ===
+// Fill in your Shopify subdomain and variant IDs below. The cart will open as a full Shopify page (no popup).
+const SHOPIFY = {
+  domain: 'YOURSHOP.myshopify.com', // TODO: change to your shop
+  // Map line-item names to Shopify variant IDs (numbers). Example IDs shown:
+  variants: {
+    'Cuticle Oil': '12345678901234',
+    'Whipped Body Butter': '12345678901235',
+    'Lip Balm': '12345678901236',
+    'Moon Candle': '12345678901237',
+    // Optional phase bundles:
+    'New Moon': '12345678901238',
+    'Waxing': '12345678901239',
+    'Full Moon': '12345678901240',
+    'Waning': '12345678901241'
   }
+};
 
-  function makeSparkle(x, y) {
-    const s = document.createElement("span");
-    s.className = "sparkle";
-
-    // small random size for airy look
-    const size = rand(2, 5);
-    s.style.width = size + "px";
-    s.style.height = size + "px";
-
-    // lavender/cream/white palette with slight variance
-    const hues = [
-      "rgba(255,255,255,0.95)",
-      "rgba(255,245,225,0.9)",
-      "rgba(210,190,255,0.95)",
-    ];
-    s.style.color = hues[(Math.random() * hues.length) | 0];
-
-    // initial position
-    s.style.left = x - size / 2 + "px";
-    s.style.top = y - size / 2 + "px";
-
-    layer.appendChild(s);
-
-    // random drift + fade with WAAPI for performance
-    const dx = rand(-drift, drift);
-    const dy = rand(-drift, drift);
-    const rot = rand(-40, 40);
-
-    s.animate(
-      [
-        { transform: "translate(0,0) rotate(0deg) scale(1)", opacity: 0.9 },
-        {
-          transform: `translate(${dx}px, ${dy}px) rotate(${rot}deg) scale(${rand(
-            0.6,
-            1.2
-          )})`,
-          opacity: 0,
-        },
-      ],
-      {
-        duration: maxAge + rand(-200, 250),
-        easing: "cubic-bezier(.2,.7,.2,1)",
-        fill: "forwards",
-      }
-    ).addEventListener("finish", () => s.remove());
+function goToShopifyCheckout(){
+  const parts = [];
+  for (const line of cart){
+    const vid = SHOPIFY.variants[line.name];
+    if (vid) parts.push(`${vid}:${line.qty}`);
   }
+  if (!SHOPIFY.domain || parts.length === 0){
+    alert('Checkout needs Shopify domain + variant IDs. Open script.js → SHOPIFY.variants and fill them in.');
+    return;
+  }
+  const url = `https://${SHOPIFY.domain}/cart/${parts.join(',')}?channel=buy_button`;
+  window.location.href = url;
+}
 
-  window.addEventListener(
-    "pointermove",
-    (e) => {
-      const now = performance.now();
-      if (now - lastTime < minDelay) return;
-      lastTime = now;
-
-      const x = e.clientX;
-      const y = e.clientY;
-
-      const count = Math.random() < 0.25 ? 2 : 1;
-      for (let i = 0; i < count; i++) {
-        makeSparkle(x + rand(-2, 2), y + rand(-2, 2));
-      }
-    },
-    { passive: true }
-  );
-
-  document.addEventListener("visibilitychange", () => {
-    if (document.hidden) layer.innerHTML = "";
-  });
-})();
-
-// Delegated handler for product add (robust to markup changes)
-document.addEventListener("click", (e) => {
-  const btn = e.target.closest(".product-card .add");
-  if (!btn) return;
-  const card = btn.closest(".product-card");
-  const name = card.querySelector("h3").textContent.trim();
-  const existing = cart.find((x) => x.name === name);
-  if (existing) existing.qty += 1;
-  else cart.push({ name, qty: 1 });
-  renderCart();
-  openCart();
-  card.animate(
-    [
-      { transform: "scale(1)", filter: "brightness(1)" },
-      { transform: "scale(1.02)", filter: "brightness(1.3)" },
-      { transform: "scale(1)", filter: "brightness(1)" },
-    ],
-    { duration: 360, easing: "cubic-bezier(.2,.7,.2,1)" }
-  );
-});
+document.getElementById('checkoutBtn')?.addEventListener('click', goToShopifyCheckout);

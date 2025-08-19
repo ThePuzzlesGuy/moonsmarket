@@ -6,7 +6,6 @@
    - Product card buttons pinned to bottom (consistent alignment)
    - Newsletter/Contact cards styled with badges and tighter spacing
    - Color theme tuned toward your label palette (deep navy, royal, gold/cream, lavender)
-   - NEW: Subtle pixie-dust cursor trail via #sparkleLayer
 */
 
 /* --- Reset / base --- */
@@ -292,7 +291,7 @@ input::placeholder, textarea::placeholder { color: var(--muted); }
 }
 .cart-drawer.open { transform: translateX(0); }
 .cart-header { display: flex; justify-content: space-between; align-items: center; padding: 14px 14px; border-bottom: 1px solid var(--border); }
-.cart-items { list-style: none; padding: 14px; margin: 0; display: grid; gap: 8px; overflow: auto; align-content: start; }
+.cart-items { list-style: none; padding: 14px; margin: 0; display: grid; gap: 8px; overflow: auto; }
 .cart-item { display: grid; grid-template-columns: auto 1fr auto; gap: 10px; align-items: center; padding: 10px; border: 1px solid var(--border); border-radius: 12px; background: rgba(255,255,255,0.05); }
 .cart-item .dot { width: 10px; height: 10px; border-radius: 999px; background: var(--accent-2); }
 .cart-item button { background: transparent; border: 1px solid var(--border); border-radius: 10px; padding: 6px 10px; cursor: pointer; color: var(--text); }
@@ -301,198 +300,14 @@ input::placeholder, textarea::placeholder { color: var(--muted); }
 /* --- Focus styles --- */
 :focus-visible { outline: 2px solid var(--accent-2); outline-offset: 2px; }
 
-
-/* === Pixie Dust Cursor Layer === */
-#sparkleLayer{
-  position: fixed;
-  inset: 0;
-  pointer-events: none;
-  z-index: 1000;
-}
-
-.sparkle{
-  position: absolute;
-  width: 6px; height: 6px;
-  border-radius: 50%;
-  /* soft radial dot with subtle glow */
-  background: radial-gradient(circle at 40% 40%, currentColor 0 40%, transparent 60%);
-  filter: blur(0.2px) drop-shadow(0 0 4px currentColor);
-  opacity: 0.9;
-  will-change: transform, opacity;
-  mix-blend-mode: screen;
-}
-
-/* Keep it subtle on users who prefer less motion */
-@media (prefers-reduced-motion: reduce){
-  #sparkleLayer{ display:none; }
-}
-
-
-:root.light .cart-drawer {
-  background: #fff;
-  color: #000;
-}
-:root.light .cart-drawer .cart-item {
-  background: rgba(0,0,0,0.05);
-  color: #000;
-}
-:root.light .cart-drawer button {
-  color: #000;
-  border-color: rgba(0,0,0,0.2);
-}
-:root.light .cart-drawer .cart-header,
-:root.light .cart-drawer .cart-footer {
-  border-color: rgba(0,0,0,0.2);
-}
-
-
-/* Cart icon mask uses currentColor so it flips with theme */
-.icon-cart{
-  display:inline-block;
-  width: 20px; height: 20px;
-  background-color: currentColor;
-  -webkit-mask: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'><path fill='black' d='M7 18a2 2 0 1 0 0 4 2 2 0 0 0 0-4m10 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4M3 4h1.2c.5 0 .94.33 1.08.8l.3 1H21a1 1 0 0 1 .98 1.2l-1.4 7A2 2 0 0 1 18.62 16H9.08a2 2 0 0 1-1.95-1.56L5.1 6H3.5a1 1 0 1 1 0-2z'/></svg>") center/contain no-repeat;
-          mask: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'><path fill='black' d='M7 18a2 2 0 1 0 0 4 2 2 0 0 0 0-4m10 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4M3 4h1.2c.5 0 .94.33 1.08.8l.3 1H21a1 1 0 0 1 .98 1.2l-1.4 7A2 2 0 0 1 18.62 16H9.08a2 2 0 0 1-1.95-1.56L5.1 6H3.5a1 1 0 1 1 0-2z'/></svg>") center/contain no-repeat;
-}
-
-
-.cart-item span { font-size: 14px; }
-.cart-item .dot { margin-right: 6px; }
-.cart-item > span:nth-child(2){ display:inline-flex; align-items:center; gap:8px; }
-.cart-item button { padding: 6px 10px; border-radius: 10px; }
-
-/* Ensure product overlay ring never blocks clicks */
-.product-card { position: relative; }
-.product-card .card-body { position: relative; z-index: 1; }
-.phase-ring { pointer-events: none; z-index: 0; }
-
-/* Bottom-align the "Claim phase" buttons across ritual cards */
-.ritual-card{ display:grid; grid-template-rows:auto 1fr auto; }
-.ritual-card ul{ margin: 0 0 8px 18px; padding:0; }
-.ritual-card .use-ritual{ align-self:end; }
-
-/* Cart list alignment & tooltip */
-.cart-items{ align-content: start; grid-auto-rows: min-content; }
-.cart-item .name-tip{ display:inline-flex; align-items:center; gap:6px; }
-.info-tip{
-  position: relative;
-  display: inline-grid; place-items: center;
-  width: 16px; height: 16px; border-radius: 999px;
-  font-size: 11px; font-weight: 700; line-height: 1;
-  border: 1px solid var(--border);
-  background: rgba(255,255,255,0.08);
-  color: var(--text);
-  cursor: default;
-}
-.info-tip::after{
-  content: attr(data-tip);
-  white-space: pre-line;
-  position: absolute;
-  left: 50%; transform: translateX(-50%);
-  bottom: 140%;
-  min-width: 220px; max-width: 280px;
-  background: rgba(16,18,28,0.95);
-  color: #f4f4f6;
-  border: 1px solid rgba(255,255,255,0.12);
-  border-radius: 10px;
-  padding: 10px 12px;
-  box-shadow: 0 12px 30px rgba(0,0,0,0.45);
-  opacity: 0; pointer-events: none;
-  transition: opacity .15s ease;
-  z-index: 10;
-}
-.info-tip:hover::after, .info-tip:focus-visible::after{ opacity: 1; }
-:root.light .info-tip{ background: rgba(0,0,0,0.04); color:#111; border-color: rgba(0,0,0,0.2); }
-:root.light .info-tip::after{
-  background: #fff; color:#111;
-  border-color: rgba(0,0,0,0.2);
-  box-shadow: 0 12px 30px rgba(0,0,0,0.12);
-}
-
-
-/* Rituals unified look */
-.ritual-card{
-  display: grid;
-  grid-template-rows: auto 1fr auto;
-  border: 1px solid var(--border); border-radius: var(--radius);
-  padding: 16px; background: linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0.02));
-  box-shadow: var(--shadow); position: relative; overflow: hidden;
-}
-.ritual-card h3{ margin-bottom: 6px; }
-.ritual-card ul{ padding-left: 18px; margin: 8px 0 0; }
-.ritual-card .use-ritual{ justify-self: stretch; }
-
-
-/* Phase moon graphic */
-.phase-moon{
-  position:absolute; top:10px; right:12px; width:92px; height:92px;
-  opacity:.25; pointer-events:none;
-}
-.phase-moon::before, .phase-moon::after{
-  content:""; position:absolute; inset:0; border-radius:50%;
-}
-.phase-moon::before{ background: var(--moon-lit); }
-.phase-moon::after{ background: var(--moon-shadow); transform: translateX(var(--shift, 0px)); transition: transform .3s ease; }
-
-/* map phases to shadow shift (approximate) */
-.phase-moon[data-phase="new"]{ --shift: 0px; }           /* fully shadowed */
-.phase-moon[data-phase="full"]{ --shift: 140px; }        /* push shadow away -> full */
-.phase-moon[data-phase="waxing"]{ --shift: -26px; }      /* lit on right */
-.phase-moon[data-phase="waning"]{ --shift: 26px; }       /* lit on left */
-
-
-/* Phase info tooltip */
-.cart-item .phase-info{
-  display:inline-flex; align-items:center; justify-content:center;
-  width:18px; height:18px; font-size:12px; border-radius:50%;
-  border:1px solid var(--border); margin-left:8px; opacity:.8;
-  position:relative; cursor:default;
-}
-.cart-item .phase-info:hover,.cart-item .phase-info:focus{ opacity:1; }
-.cart-item .phase-tip{
-  position:absolute; bottom:120%; left:0; transform: translateX(-10%);
-  min-width:220px; max-width:260px; padding:10px; border-radius:10px;
-  background: rgba(0,0,0,0.8); color:#fff; border:1px solid rgba(255,255,255,0.2);
-  box-shadow: var(--shadow); display:none; z-index:10;
-}
-:root.light .cart-item .phase-tip{ background:#111; color:#fff; border-color: rgba(0,0,0,0.2); }
-.cart-item .phase-info:hover .phase-tip, .cart-item .phase-info:focus-within .phase-tip{ display:block; }
-.cart-item .phase-tip h4{ margin:0 0 6px; font-size:14px; }
-.cart-item .phase-tip ul{ margin:0; padding-left:18px; font-size:13px; }
-
+/* Ensure phase ring never blocks clicks */
+.phase-ring{ pointer-events:none; z-index:0; }
+.product-card .card-body{ position:relative; z-index:1; }
 .product-card .actions .btn{ position:relative; z-index:2; }
 
-/* --- Cart bundle expand/collapse --- */
-.cart-item-row{
-  display: grid;
-  grid-template-columns: auto 1fr auto;
-  gap: 10px;
-  align-items: center;
-}
-.expand-btn{
-  display: inline-grid;
-  place-items: center;
-  width: 22px; height: 22px;
-  border-radius: 8px;
-  border: 1px solid var(--border);
-  background: transparent;
-  cursor: pointer;
-  color: inherit;
-  font-size: 14px;
-  opacity: .9;
-}
-.expand-btn:hover{ border-color: var(--accent-2); }
-.bundle-details{
-  grid-column: 1 / -1;
-  margin-top: 8px;
-  border-top: 1px dashed var(--border);
-  padding-top: 8px;
-  overflow: hidden;
-  max-height: 0;
-  transition: max-height .25s ease;
-}
-.bundle-details.open{
-  max-height: 200px; /* sufficient to show 3 bullets */
-}
-.bundle-details ul{ margin: 0; padding-left: 18px; color: var(--muted); }
-.bundle-details li{ margin: 4px 0; }
+/* Cart line expandable details for phase bundles */
+.cart-item .expander{ margin-left:6px; width:22px; height:22px; border-radius:8px; display:inline-flex; align-items:center; justify-content:center; font-weight:700; opacity:.8; }
+.cart-item .expander:focus-visible{ outline:2px solid var(--accent-2); outline-offset:2px; }
+.cart-item .details{ overflow:hidden; max-height:0; transition:max-height .25s ease; }
+.cart-item[aria-expanded="true"] .details{ max-height:220px; }
+.cart-item .details ul{ margin:8px 0 0 26px; padding:0; color:var(--muted); }
