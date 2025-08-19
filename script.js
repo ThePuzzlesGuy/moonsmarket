@@ -256,7 +256,7 @@ document.getElementById("checkoutBtn")?.addEventListener("click", () => {
     alert("Your ritual is empty or items aren’t mapped to Shopify yet.");
     return;
   }
-  const url = `https://${SHOPIFY.domain}/cart/${pairs.join(",")}`;
+  const url = `https://${0rd0wb-79.myshopify.com}/cart/${pairs.join(",")}`;
   window.location.href = url; // navigate to full Shopify cart page
 });
 
